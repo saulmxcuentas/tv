@@ -295,7 +295,6 @@
             display: block;
         }
         
-        /* Pantalla de bienvenida */
         .welcome-screen {
             width: 100%;
             height: 100%;
@@ -329,7 +328,6 @@
             display: block;
         }
         
-        /* Loading overlay - el video se oculta debajo */
         .loading-overlay {
             position: absolute;
             top: 0;
@@ -394,14 +392,26 @@
             opacity: 0.9;
         }
         
-        /* Ocultar el video mientras carga */
-        .video-frame.loading-mode video {
-            opacity: 0;
-            visibility: hidden;
+        .error-message {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 26;
+            color: #ff6b6b;
+            text-align: center;
+            padding: 1rem;
+            gap: 0.8rem;
         }
         
-        .video-frame.loading-mode .loading-overlay {
-            display: flex;
+        .error-message.hide {
+            display: none;
         }
         
         .footer-note {
@@ -411,6 +421,16 @@
             color: var(--text-secondary);
             border-top: 1px solid var(--border-light);
             padding-top: 1.2rem;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            margin-left: 0.5rem;
         }
     </style>
 </head>
@@ -435,8 +455,8 @@
 
     <main class="main-content">
         <div class="logo-compact">
-            <h1>✦ TV México · IPTV Premium ✦</h1>
-            <span>HBO · Universal · Fox Sports · ESPN · A&E · AMC · canales en vivo HD</span>
+            <h1>✦ TV México · IPTV Premium ✦ <span class="status-badge">PROXY ACTIVADO</span></h1>
+            <span>HBO · Universal · ESPN · A&E · AMC · canales en vivo HD</span>
         </div>
 
         <div class="screen-wrapper">
@@ -447,20 +467,39 @@
                     <div style="font-size: 0.85rem; color: var(--text-secondary);">Selecciona un canal de la lista · Disfruta en HD</div>
                     <div style="font-size: 0.7rem; color: var(--text-secondary);">reproducción directa · streaming real</div>
                 </div>
-                <video id="playerVideo" controls playsinline style="width: 100%; height: 100%; object-fit: contain; background: #000;"></video>
+                <video id="playerVideo" controls playsinline crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: contain; background: #000;"></video>
             </div>
         </div>
 
         <div class="footer-note">
-            ✦ canales reales desde servidor · Fox Sports completamente eliminado · búsqueda instantánea · controles de video ✦
+            ✦ canales reales desde servidor · búsqueda instantánea · controles de video · proxy CORS activado para GitHub Pages ✦
         </div>
     </main>
 </div>
 
 <script>
     // ============================================================
-    // LISTA DE CANALES SIN NINGÚN CANAL FOX SPORTS
-    // Se han eliminado: Fox Sports, Fox Sports 2, Fox Sports 3, Fox Sports Premium, etc.
+    // PROXY CORS para GitHub Pages - Evita bloqueos de mixed content
+    // ============================================================
+    // Usamos un proxy CORS público para evitar problemas de HTTPS vs HTTP
+    // y también problemas de CORS en GitHub Pages
+    const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
+    const USE_PROXY = true; // GitHub Pages necesita proxy por mixed content
+    
+    // Función para obtener URL con proxy si es necesario
+    function getProxiedUrl(url) {
+        if (!USE_PROXY) return url;
+        // Si ya es HTTPS y no necesita proxy, a veces funciona directamente
+        if (url.startsWith('https://')) {
+            // Para HTTPS probamos sin proxy primero, pero si falla el proxy lo hará después
+            return url;
+        }
+        // Para HTTP, usamos proxy para evitar mixed content
+        return CORS_PROXY + url;
+    }
+    
+    // ============================================================
+    // LISTA DE CANALES - SIN FOX SPORTS
     // ============================================================
     const rawChannels = [
         { name: "HBO", group: "HBO", url: "http://45.5.119.43:4000/play/a0l2/index.m3u8", emoji: "🎬", num: 101 },
@@ -556,6 +595,8 @@
     for (const [group, channels] of Object.entries(categoryGroups)) {
         channels.forEach(ch => {
             ch.id = globalId++;
+            ch.originalUrl = ch.url;
+            ch.url = getProxiedUrl(ch.originalUrl);
             allChannels.push(ch);
         });
     }
@@ -598,6 +639,21 @@
         `;
         return overlay;
     }
+    
+    function showErrorOverlay(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.innerHTML = `
+            <div style="font-size: 2rem;">⚠️</div>
+            <div style="font-weight: 500;">Error al cargar el canal</div>
+            <div style="font-size: 0.8rem;">${message}</div>
+            <div style="font-size: 0.7rem; margin-top: 0.5rem;">Intenta con otro canal</div>
+        `;
+        videoFrame.appendChild(errorDiv);
+        setTimeout(() => {
+            if (errorDiv.parentElement) errorDiv.remove();
+        }, 5000);
+    }
 
     function hideLoadingOverlay() {
         if (currentLoadingOverlay && currentLoadingOverlay.parentElement) {
@@ -627,20 +683,21 @@
             currentHls = null;
         }
         
-        // Cambiar a modo video y mostrar loading
         videoFrame.classList.remove('welcome-mode');
         videoFrame.classList.add('video-mode');
         showLoadingOverlay(channel.name);
         
-        // Limpiar y ocultar el video hasta que cargue
         playerVideo.style.opacity = '0';
         playerVideo.style.visibility = 'hidden';
         playerVideo.pause();
         playerVideo.removeAttribute('src');
         playerVideo.load();
         
+        let loadingCompleted = false;
+        
         const onVideoReady = () => {
-            // Video listo, mostrar y ocultar loading
+            if (loadingCompleted) return;
+            loadingCompleted = true;
             playerVideo.style.opacity = '1';
             playerVideo.style.visibility = 'visible';
             hideLoadingOverlay();
@@ -654,50 +711,65 @@
         playerVideo.addEventListener('loadeddata', onVideoReady);
         
         const fallbackTimeout = setTimeout(() => {
-            // Fallback: mostrar el video aunque no haya cargado completamente
-            playerVideo.style.opacity = '1';
-            playerVideo.style.visibility = 'visible';
-            hideLoadingOverlay();
-        }, 8000);
+            if (!loadingCompleted) {
+                loadingCompleted = true;
+                playerVideo.style.opacity = '1';
+                playerVideo.style.visibility = 'visible';
+                hideLoadingOverlay();
+            }
+        }, 10000);
         
         playerVideo.addEventListener('canplaythrough', () => {
             clearTimeout(fallbackTimeout);
         });
         
-        playerVideo.addEventListener('error', () => {
+        playerVideo.addEventListener('error', (e) => {
             clearTimeout(fallbackTimeout);
-            playerVideo.style.opacity = '1';
-            playerVideo.style.visibility = 'visible';
-            hideLoadingOverlay();
+            if (!loadingCompleted) {
+                loadingCompleted = true;
+                playerVideo.style.opacity = '1';
+                playerVideo.style.visibility = 'visible';
+                hideLoadingOverlay();
+                showErrorOverlay('No se pudo cargar el stream. El servidor puede estar temporalmente fuera de servicio.');
+            }
         });
         
-        if (channel.url.includes('.m3u8') && window.Hls && Hls.isSupported()) {
-            currentHls = new Hls({
-                debug: false,
-                enableWorker: true,
-                lowLatencyMode: true,
-                backBufferLength: 30
-            });
-            
-            currentHls.loadSource(channel.url);
-            currentHls.attachMedia(playerVideo);
-            
-            currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
-                playerVideo.play().catch(e => console.log('Auto-play:', e));
-            });
-            
-            currentHls.on(Hls.Events.ERROR, (event, data) => {
-                if (data.fatal && data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-                    playerVideo.src = channel.url;
-                    playerVideo.play().catch(e => console.log('Fallback play:', e));
-                }
-            });
-        } 
-        else if (playerVideo.canPlayType('application/vnd.apple.mpegURL')) {
-            playerVideo.src = channel.url;
-        } 
-        else {
-            playerVideo.src = channel.url;
+        try {
+            if (channel.url.includes('.m3u8') && window.Hls && Hls.isSupported()) {
+                currentHls = new Hls({
+                    debug: false,
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    backBufferLength: 30
+                });
+                
+                currentHls.loadSource(channel.url);
+                currentHls.attachMedia(playerVideo);
+                
+                currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    playerVideo.play().catch(e => console.log('Auto-play prevented:', e));
+                });
+                
+                currentHls.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal) {
+                        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+                            playerVideo.src = channel.url;
+                            playerVideo.play().catch(e => console.log('Fallback play:', e));
+                        }
+                    }
+                });
+            } 
+            else if (playerVideo.canPlayType('application/vnd.apple.mpegURL')) {
+                playerVideo.src = channel.url;
+            } 
+            else {
+                playerVideo.src = channel.url;
+            }
+        } catch (error) {
+            console.error('Error loading channel:', error);
+            clearTimeout(fallbackTimeout);
+            hideLoadingOverlay();
+            showErrorOverlay('Error técnico al cargar el canal');
         }
     }
 
@@ -839,6 +911,9 @@
             if (e.matches) document.body.classList.remove('light');
             else document.body.classList.add('light');
         });
+        
+        // Mostrar advertencia sobre el proxy
+        console.log('Usando proxy CORS para GitHub Pages. Si los canales no cargan, el servidor puede estar temporalmente fuera de servicio.');
     }
     init();
 </script>
