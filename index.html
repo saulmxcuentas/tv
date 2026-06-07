@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>TV México · IPTV Premium · Canales HD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>SKIN TV · IPTV Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         * {
@@ -13,7 +13,7 @@
         }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
             min-height: 100vh;
             background: #0a0c10;
             overflow-x: hidden;
@@ -22,33 +22,46 @@
         :root {
             --bg-page: #0a0c10;
             --card-bg: #14171c;
+            --sidebar-bg: rgba(20, 23, 28, 0.96);
+            --panel-bg: #1e2128;
             --text-primary: #f0f2f5;
             --text-secondary: #9ca3af;
             --border-light: #2d3139;
             --accent: #e63946;
+            --accent-hover: #c1121f;
             --accent-soft: #2d1a1f;
+            --video-placeholder: #1a1d24;
+            --shadow-md: 0 20px 35px -12px rgba(0, 0, 0, 0.5);
+            --scrollbar-track: #1e2128;
+            --scrollbar-thumb: #2d3139;
+            --search-bg: #1a1d24;
+            --option-bg: #1e2128;
         }
 
         .app-layout {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
             max-width: 1600px;
             margin: 0 auto;
+            width: 100%;
         }
 
         .top-controls {
-            background: rgba(20, 23, 28, 0.96);
+            background: var(--sidebar-bg);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-light);
             position: sticky;
             top: 0;
             z-index: 30;
-            padding: 0.8rem 1.5rem 0 1.5rem;
+            padding: 0.6rem 1rem 0 1rem;
         }
         
         .search-row {
             display: flex;
             justify-content: flex-end;
-            margin-bottom: 0.8rem;
-            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.4rem;
             border-bottom: 1px solid var(--border-light);
         }
         
@@ -56,13 +69,17 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            background: #1a1d24;
+            background: var(--search-bg);
             border: 1px solid var(--border-light);
             border-radius: 2rem;
-            padding: 0.5rem 1rem;
-            width: 280px;
+            padding: 0.4rem 1rem;
+            width: min(280px, 70%);
+            transition: all 0.2s;
         }
-        
+        .search-box:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent-soft);
+        }
         .search-box input {
             background: transparent;
             border: none;
@@ -70,144 +87,214 @@
             font-size: 0.85rem;
             color: var(--text-primary);
             width: 100%;
+            font-family: inherit;
         }
-        
         .search-box input::placeholder {
             color: var(--text-secondary);
+            opacity: 0.7;
         }
-        
+        .search-icon {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
         .clear-search {
             background: none;
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
+            font-size: 1rem;
+            padding: 0 0.2rem;
             display: none;
         }
-        
         .clear-search.visible {
             display: block;
+        }
+        .clear-search:hover {
+            color: var(--accent);
         }
         
         .categories-tab-bar {
             overflow-x: auto;
             white-space: nowrap;
+            scrollbar-width: thin;
+            margin-top: 0.2rem;
+            padding-bottom: 0.2rem;
         }
-        
+        .categories-tab-bar::-webkit-scrollbar {
+            height: 3px;
+        }
         .tabs-container {
             display: flex;
-            gap: 0.3rem;
+            gap: 0.2rem;
         }
-        
         .category-tab {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.7rem 1.2rem;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
             background: transparent;
             border: none;
-            font-size: 0.85rem;
+            border-radius: 2rem 2rem 0 0;
+            font-size: 0.75rem;
             font-weight: 500;
             color: var(--text-secondary);
             cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
             border-bottom: 2px solid transparent;
         }
-        
         .category-tab:hover {
             color: var(--accent);
             background: var(--accent-soft);
         }
-        
         .category-tab.active {
             color: var(--accent);
             border-bottom-color: var(--accent);
             background: var(--accent-soft);
         }
-        
+        .tab-icon {
+            font-size: 1rem;
+        }
+
         .channels-strip-container {
-            background: rgba(20, 23, 28, 0.96);
+            background: var(--sidebar-bg);
             backdrop-filter: blur(8px);
             border-bottom: 1px solid var(--border-light);
-            padding: 1rem 1.5rem;
+            padding: 0.7rem 1rem;
             overflow-x: auto;
+            scrollbar-width: thin;
             position: sticky;
-            top: 92px;
+            top: 72px;
             z-index: 20;
         }
-        
+        .channels-strip-container::-webkit-scrollbar {
+            height: 4px;
+        }
         .channels-strip {
             display: flex;
-            gap: 0.8rem;
+            gap: 0.7rem;
+            flex-wrap: nowrap;
         }
-        
         .channel-card-horizontal {
-            background: #1e2128;
-            border-radius: 1rem;
-            padding: 0.7rem 1rem;
-            min-width: 150px;
+            background: var(--panel-bg);
+            border-radius: 0.9rem;
+            padding: 0.5rem 0.9rem;
+            min-width: 130px;
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 0.6rem;
             cursor: pointer;
             border: 1px solid var(--border-light);
             transition: all 0.2s;
             flex-shrink: 0;
         }
-        
         .channel-card-horizontal:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             border-color: var(--accent);
             background: var(--accent-soft);
         }
-        
         .channel-card-horizontal.active {
             border-left: 3px solid var(--accent);
             background: var(--accent-soft);
+            border-color: var(--accent);
         }
-        
         .ch-num-h {
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             background: var(--card-bg);
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 0.8rem;
+            border-radius: 0.7rem;
             color: var(--accent);
+            font-family: monospace;
         }
-        
+        .ch-info-h {
+            flex: 1;
+            overflow: hidden;
+        }
+        .ch-name-h {
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+            max-width: 110px;
+        }
+        .ch-cat-h {
+            font-size: 0.55rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .no-results {
+            padding: 1rem;
+            text-align: center;
+            color: var(--text-secondary);
+            width: 100%;
+            font-size: 0.8rem;
+        }
+
         .main-content {
             flex: 1;
-            padding: 1.8rem 2rem 2rem 2rem;
+            padding: 1rem 1.2rem 1.5rem 1.2rem;
         }
         
+        .logo-compact {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
         .logo-compact h1 {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
             background: linear-gradient(135deg, #f0f2f5 0%, #e63946 70%);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
+            margin-bottom: 0;
         }
         
+        .logo-compact span {
+            display: none;
+        }
+
         .screen-wrapper {
             background: var(--card-bg);
-            border-radius: 1.5rem;
+            border-radius: 1.2rem;
             overflow: hidden;
-            margin-top: 1rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            margin-top: 0.8rem;
+            width: 100%;
         }
-        
         .video-frame {
             background: #000;
             aspect-ratio: 16 / 9;
             width: 100%;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
         .video-frame video {
             width: 100%;
             height: 100%;
             object-fit: contain;
+            background: #000;
+            display: block;
+        }
+        
+        video::-webkit-media-controls-fullscreen-button {
+            display: block;
+        }
+        
+        video:-webkit-full-page-media {
+            max-height: 100%;
         }
         
         .welcome-screen {
@@ -217,21 +304,23 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 1rem;
+            gap: 0.5rem;
+            text-align: center;
+            padding: 1rem;
             position: absolute;
             top: 0;
             left: 0;
-            background: #1a1d24;
+            background: var(--video-placeholder);
             z-index: 5;
         }
+        .welcome-screen div:first-child { font-size: 2.5rem; }
+        .welcome-screen div:nth-child(2) { font-size: 1rem; font-weight: 500; }
+        .welcome-screen div:nth-child(3) { font-size: 0.7rem; }
         
-        .video-mode .welcome-screen {
-            display: none;
-        }
-        
-        .welcome-mode video {
-            display: none;
-        }
+        .video-frame.welcome-mode .welcome-screen { display: flex; }
+        .video-frame.welcome-mode video { display: none; }
+        .video-frame.video-mode .welcome-screen { display: none; }
+        .video-frame.video-mode video { display: block; }
         
         .loading-overlay {
             position: absolute;
@@ -239,81 +328,282 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: #000000dd;
+            backdrop-filter: blur(12px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 20;
-            gap: 1rem;
+            z-index: 40;
+            gap: 0.8rem;
+            border-radius: 0;
         }
-        
         .loading-dots {
             display: flex;
             gap: 0.6rem;
+            align-items: center;
+            justify-content: center;
         }
-        
         .loading-dots span {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background-color: var(--accent);
-            animation: bounce 1.4s infinite;
+            animation: bounce 1.4s infinite ease-in-out both;
+            box-shadow: 0 0 6px rgba(230,57,70,0.6);
         }
-        
+        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+        .loading-text {
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 2px black;
+        }
+        .loading-sub {
+            color: #ffccd0;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: rgba(0,0,0,0.4);
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+        }
         @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0.5); opacity: 0.4; }
+            0%, 80%, 100% { transform: scale(0.5); opacity: 0.5; }
             40% { transform: scale(1); opacity: 1; }
         }
         
-        .error-message {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            right: 10px;
-            background: rgba(230, 57, 70, 0.95);
-            color: white;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            text-align: center;
-            z-index: 21;
+        .source-selector {
+            display: none;
+            gap: 0.8rem;
+            justify-content: center;
+            margin-top: 0.8rem;
+            margin-bottom: 0.3rem;
+            flex-wrap: wrap;
         }
-        
-        .no-results {
-            padding: 2rem;
-            text-align: center;
+        .source-selector.visible {
+            display: flex;
+        }
+        .source-btn {
+            background: var(--option-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 2rem;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
             color: var(--text-secondary);
+            font-family: inherit;
+        }
+        .source-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
         }
         
         .footer-note {
-            margin-top: 1.8rem;
-            text-align: center;
-            font-size: 0.65rem;
-            color: var(--text-secondary);
-            border-top: 1px solid var(--border-light);
-            padding-top: 1.2rem;
+            display: none;
         }
-        
-        .solution-box {
-            background: #2a1a1f;
-            border: 1px solid var(--accent);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-top: 1rem;
-            text-align: center;
+
+        @media (min-width: 768px) {
+            .top-controls {
+                padding: 0.8rem 1.8rem 0 1.8rem;
+            }
+            .search-box {
+                width: 320px;
+                padding: 0.5rem 1.2rem;
+            }
+            .category-tab {
+                padding: 0.7rem 1.3rem;
+                font-size: 0.85rem;
+            }
+            .channels-strip-container {
+                padding: 0.9rem 1.8rem;
+            }
+            .channel-card-horizontal {
+                min-width: 170px;
+                padding: 0.6rem 1rem;
+            }
+            .ch-name-h {
+                font-size: 0.85rem;
+                max-width: 140px;
+            }
+            .ch-num-h {
+                width: 38px;
+                height: 38px;
+                font-size: 0.85rem;
+            }
+            .main-content {
+                padding: 1.5rem 2rem 1.5rem 2rem;
+            }
+            .logo-compact h1 {
+                font-size: 2rem;
+            }
+            .source-btn {
+                padding: 0.5rem 1.8rem;
+                font-size: 0.8rem;
+            }
+            .loading-text {
+                font-size: 1.1rem;
+            }
+            .loading-sub {
+                font-size: 0.8rem;
+            }
         }
-        
-        .solution-box a {
-            color: var(--accent);
-            text-decoration: none;
+
+        @media (min-width: 1024px) {
+            .app-layout {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1rem 1.5rem;
+            }
+            .top-controls {
+                position: sticky;
+                top: 1rem;
+                width: 320px;
+                flex-shrink: 0;
+                border-radius: 1.2rem;
+                border: 1px solid var(--border-light);
+                backdrop-filter: blur(16px);
+                padding: 1rem;
+                margin: 0;
+                background: var(--sidebar-bg);
+                order: 1;
+                height: fit-content;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            .search-row {
+                justify-content: flex-start;
+                border-bottom: none;
+                margin-bottom: 0.8rem;
+            }
+            .search-box {
+                width: 100%;
+            }
+            .categories-tab-bar {
+                margin-bottom: 1rem;
+                overflow-x: visible;
+                white-space: normal;
+            }
+            .tabs-container {
+                flex-wrap: wrap;
+                gap: 0.4rem;
+            }
+            .category-tab {
+                border-radius: 2rem;
+                border-bottom: none;
+                background: var(--panel-bg);
+                padding: 0.5rem 1rem;
+            }
+            .category-tab.active {
+                background: var(--accent);
+                color: white;
+                border-bottom: none;
+            }
+            .channels-strip-container {
+                position: relative;
+                top: 0;
+                background: transparent;
+                backdrop-filter: none;
+                padding: 0;
+                overflow-x: visible;
+                margin-top: 1rem;
+                border: none;
+            }
+            .channels-strip {
+                flex-direction: column;
+                flex-wrap: nowrap;
+                gap: 0.6rem;
+                max-height: 55vh;
+                overflow-y: auto;
+                padding-right: 0.5rem;
+            }
+            .channel-card-horizontal {
+                min-width: auto;
+                width: 100%;
+            }
+            .ch-name-h {
+                max-width: 180px;
+            }
+            .main-content {
+                flex: 1;
+                order: 2;
+                padding: 0;
+                min-width: 0;
+            }
+            .video-frame {
+                aspect-ratio: 16 / 9;
+            }
+            .source-selector {
+                justify-content: flex-start;
+            }
+            .logo-compact {
+                text-align: left;
+                margin-bottom: 0.8rem;
+            }
         }
-        
-        .solution-box code {
-            background: #1a1d24;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.8rem;
+
+        @media (min-width: 768px) and (max-width: 1023px) and (orientation: landscape) {
+            .app-layout {
+                display: block;
+            }
+            .top-controls {
+                padding: 0.5rem 1rem 0 1rem;
+            }
+            .channels-strip-container {
+                top: 62px;
+            }
+            .main-content {
+                padding: 0.8rem 1rem 0.8rem 1rem;
+            }
+            .video-frame {
+                aspect-ratio: 16 / 9;
+                max-height: 70vh;
+            }
+            .channel-card-horizontal {
+                min-width: 140px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-controls {
+                padding: 0.4rem 0.8rem 0 0.8rem;
+            }
+            .channel-card-horizontal {
+                min-width: 110px;
+                padding: 0.4rem 0.7rem;
+            }
+            .ch-name-h {
+                font-size: 0.7rem;
+                max-width: 85px;
+            }
+            .ch-num-h {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
+            }
+            .main-content {
+                padding: 0.8rem;
+            }
+            .logo-compact h1 {
+                font-size: 1.3rem;
+            }
+            .source-btn {
+                padding: 0.3rem 1rem;
+                font-size: 0.65rem;
+            }
+            .loading-text {
+                font-size: 0.85rem;
+            }
+            .loading-sub {
+                font-size: 0.6rem;
+            }
         }
     </style>
 </head>
@@ -322,304 +612,335 @@
     <div class="top-controls">
         <div class="search-row">
             <div class="search-box">
-                <span>🔍</span>
-                <input type="text" id="searchInput" placeholder="Buscar canal...">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Buscar canal por nombre..." autocomplete="off">
                 <button class="clear-search" id="clearSearchBtn">✕</button>
             </div>
         </div>
-        <div class="categories-tab-bar">
+        <div class="categories-tab-bar" id="categoriesTabBar">
             <div class="tabs-container" id="tabsContainer"></div>
         </div>
-    </div>
-
-    <div class="channels-strip-container">
-        <div class="channels-strip" id="channelsStrip"></div>
+        <div class="channels-strip-container" id="channelsStripContainer">
+            <div class="channels-strip" id="channelsStrip"></div>
+        </div>
     </div>
 
     <main class="main-content">
         <div class="logo-compact">
-            <h1>✦ TV México · IPTV Premium ✦</h1>
-            <span>HBO · Universal · ESPN · A&E · AMC · canales en vivo HD</span>
+            <h1>✦ SKIN TV ✦</h1>
         </div>
 
         <div class="screen-wrapper">
             <div class="video-frame" id="videoFrame">
-                <div class="welcome-screen">
-                    <div style="font-size: 3rem;">🎬</div>
-                    <div style="font-size: 1.2rem;">Bienvenido a IPTV</div>
-                    <div style="font-size: 0.85rem;">Selecciona un canal de la lista</div>
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div>📺</div>
+                    <div style="font-weight: 500;">Bienvenido a SKIN TV</div>
+                    <div>Selecciona un canal y disfruta</div>
                 </div>
-                <video id="playerVideo" controls playsinline></video>
-            </div>
-            
-            <div class="solution-box" id="solutionBox" style="display: none;">
-                ⚠️ <strong>Los canales no cargan en GitHub Pages debido a restricciones CORS</strong><br><br>
-                📌 <strong>Soluciones:</strong><br>
-                1. 🖥️ <strong>Descarga este archivo</strong> y ábrelo localmente en tu PC (doble clic)<br>
-                2. 🚀 Usa una <strong>extensión CORS</strong> para Chrome: 
-                   <a href="https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf" target="_blank">Allow CORS</a><br>
-                3. 📱 En <strong>Android</strong>, usa <strong>VLC</strong> o <strong>IPTV Smarters</strong> con la lista M3U<br>
-                4. 💻 <strong>Ejecuta un servidor local:</strong> <code>python -m http.server 8000</code> o <code>npx serve</code>
+                <video id="playerVideo" controls playsinline webkit-playsinline="true" x-webkit-airplay="deny" style="width: 100%; height: 100%; object-fit: contain; background: #000;"></video>
             </div>
         </div>
 
-        <div class="footer-note">
-            ✦ canales reales · búsqueda instantánea · si no cargan, usa las soluciones de arriba ✦
+        <div class="source-selector" id="sourceSelector">
+            <button class="source-btn" id="source1Btn">🌐 Opción 1</button>
+            <button class="source-btn" id="source2Btn">🌐 Opción 2</button>
         </div>
     </main>
 </div>
 
 <script>
-    // ============================================================
-    // CANALES IPTV (SIN FOX SPORTS)
-    // ============================================================
-    const rawChannels = [
-        { name: "HBO", group: "HBO", url: "http://45.5.119.43:4000/play/a0l2/index.m3u8", num: 101 },
-        { name: "HBO 2", group: "HBO", url: "http://45.5.119.43:4000/play/a00c/index.m3u8", num: 102 },
-        { name: "HBO Family", group: "HBO", url: "http://45.5.119.43:4000/play/a0l5/index.m3u8", num: 103 },
-        { name: "UNIVERSAL CHANNEL", group: "Universal", url: "http://45.5.119.43:4000/play/a0ih/index.m3u8", num: 201 },
-        { name: "UNIVERSAL CINEMA", group: "Universal", url: "http://45.5.119.43:4000/play/a0kt/index.m3u8", num: 202 },
-        { name: "A&E Latinoamerica", group: "Series", url: "http://45.5.119.43:4000/play/a0gt/index.m3u8", num: 301 },
-        { name: "AMCMXHD", group: "Series", url: "http://45.5.119.43:4000/play/a0gu/index.m3u8", num: 302 },
-        { name: "AXN", group: "Series", url: "http://45.5.119.43:4000/play/a0iy/index.m3u8", num: 303 },
-        { name: "TNT", group: "Series", url: "http://45.5.119.43:4000/play/a0hu/index.m3u8", num: 304 },
-        { name: "Discovery Channel", group: "Documentales", url: "http://45.5.119.43:4000/play/a0kn/index.m3u8", num: 401 },
-        { name: "NATIONAL GEOGRAPHIC", group: "Documentales", url: "http://45.5.119.43:4000/play/a0kk/index.m3u8", num: 402 },
-        { name: "HISTORY", group: "Documentales", url: "http://45.5.119.43:4000/play/a0gk/index.m3u8", num: 403 },
-        { name: "Disney Channel", group: "Infantiles", url: "http://45.5.119.43:4000/play/a0i8/index.m3u8", num: 501 },
-        { name: "Cartoon Network", group: "Infantiles", url: "http://45.5.119.43:4000/play/a0l0/index.m3u8", num: 502 },
-        { name: "Nickelodeon", group: "Infantiles", url: "http://45.5.119.43:4000/play/a0hs/index.m3u8", num: 503 },
-        { name: "CINEMAX", group: "Películas", url: "http://45.5.119.43:4000/play/a0il/index.m3u8", num: 601 },
-        { name: "ESPN HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a052/index.m3u8", num: 701 },
-        { name: "ESPN 2 HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a053/index.m3u8", num: 702 },
-        { name: "ESPN 3 HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a054/index.m3u8", num: 703 },
-        { name: "TUDN", group: "Deportes", url: "http://45.5.119.43:4000/play/a05q/index.m3u8", num: 704 },
-        { name: "MTV", group: "Música", url: "http://45.5.119.43:4000/play/a0if/index.m3u8", num: 801 }
-    ];
-
-    // Organizar por categorías
-    const categories = {};
-    rawChannels.forEach(ch => {
-        if (!categories[ch.group]) categories[ch.group] = [];
-        categories[ch.group].push({ ...ch, id: Math.random() });
-    });
-
-    let currentCategory = Object.keys(categories)[0];
-    let currentChannel = null;
-    let searchQuery = "";
-    let isSearchMode = false;
-    let currentHls = null;
-
-    const tabsContainer = document.getElementById('tabsContainer');
-    const channelsStrip = document.getElementById('channelsStrip');
-    const videoFrame = document.getElementById('videoFrame');
+    // Prevención de fullscreen automático
+    let isFullscreenByUser = false;
     const playerVideo = document.getElementById('playerVideo');
-    const searchInput = document.getElementById('searchInput');
-    const clearSearchBtn = document.getElementById('clearSearchBtn');
-    const solutionBox = document.getElementById('solutionBox');
-
-    let loadErrorCount = 0;
-
-    function showLoading() {
-        const existing = document.querySelector('.loading-overlay');
-        if (existing) existing.remove();
-        const overlay = document.createElement('div');
-        overlay.className = 'loading-overlay';
-        overlay.innerHTML = `
-            <div class="loading-dots"><span></span><span></span><span></span></div>
-            <div>Cargando canal...</div>
-        `;
-        videoFrame.style.position = 'relative';
-        videoFrame.appendChild(overlay);
-    }
-
-    function hideLoading() {
-        const overlay = document.querySelector('.loading-overlay');
-        if (overlay) overlay.remove();
-    }
-
-    function showError(msg) {
-        const existing = document.querySelector('.error-message');
-        if (existing) existing.remove();
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.innerHTML = msg;
-        videoFrame.appendChild(errorDiv);
-        setTimeout(() => errorDiv.remove(), 5000);
-    }
-
-    function playChannel(channel) {
-        if (!channel || !channel.url) return;
-        
-        if (currentHls) {
-            currentHls.destroy();
-            currentHls = null;
-        }
-        
-        videoFrame.classList.remove('welcome-mode');
-        videoFrame.classList.add('video-mode');
-        showLoading();
-        
-        playerVideo.pause();
-        playerVideo.removeAttribute('src');
-        
-        // Intentar reproducción directa primero
-        const attemptPlay = (url) => {
-            if (url.includes('.m3u8') && Hls.isSupported()) {
-                currentHls = new Hls({
-                    debug: false,
-                    enableWorker: true,
-                    xhrSetup: (xhr, url) => {
-                        xhr.withCredentials = false;
-                    }
-                });
-                
-                currentHls.loadSource(url);
-                currentHls.attachMedia(playerVideo);
-                
-                currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    hideLoading();
-                    playerVideo.play().catch(e => console.log('Auto-play:', e));
-                });
-                
-                currentHls.on(Hls.Events.ERROR, (event, data) => {
-                    if (data.fatal) {
-                        console.error('HLS Error:', data);
-                        hideLoading();
-                        loadErrorCount++;
-                        
-                        if (loadErrorCount === 1) {
-                            showError('⚠️ Error CORS - Los canales no cargan en GitHub Pages');
-                            solutionBox.style.display = 'block';
-                        } else {
-                            showError('No se puede reproducir: ' + channel.name);
-                        }
-                    }
-                });
-            } else {
-                playerVideo.src = url;
-                playerVideo.play().catch(e => {
-                    hideLoading();
-                    showError('Error al reproducir. ' + e.message);
-                    solutionBox.style.display = 'block';
-                });
-                hideLoading();
+    
+    playerVideo.setAttribute('playsinline', 'true');
+    playerVideo.setAttribute('webkit-playsinline', 'true');
+    
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
+    function exitFullscreenIfNotUser() {
+        if (!isFullscreenByUser) {
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
             }
-        };
-        
-        attemptPlay(channel.url);
+        }
     }
-
-    function renderChannels() {
-        let channelsToShow = [];
-        if (isSearchMode && searchQuery) {
-            channelsToShow = rawChannels.filter(c => 
-                c.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        } else {
-            channelsToShow = categories[currentCategory] || [];
+    
+    document.addEventListener('fullscreenchange', function() {
+        isFullscreenByUser = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    });
+    document.addEventListener('webkitfullscreenchange', function() {
+        isFullscreenByUser = !!(document.webkitFullscreenElement);
+    });
+    
+    window.addEventListener('orientationchange', function() {
+        setTimeout(exitFullscreenIfNotUser, 100);
+    });
+    
+    let lastHeight = window.innerHeight;
+    window.addEventListener('resize', function() {
+        if (Math.abs(window.innerHeight - lastHeight) > 100) {
+            setTimeout(exitFullscreenIfNotUser, 50);
         }
-        
-        channelsStrip.innerHTML = '';
-        if (channelsToShow.length === 0) {
-            channelsStrip.innerHTML = '<div class="no-results">🔍 No se encontraron canales</div>';
-            return;
-        }
-        
-        channelsToShow.forEach(ch => {
-            const card = document.createElement('div');
-            card.className = 'channel-card-horizontal';
-            if (currentChannel === ch) card.classList.add('active');
-            card.innerHTML = `
-                <div class="ch-num-h">${ch.num}</div>
-                <div class="ch-info-h">
-                    <div style="font-weight:600">${ch.name}</div>
-                    <div style="font-size:0.6rem;color:#9ca3af">${ch.group}</div>
-                </div>
-            `;
-            card.onclick = () => {
-                currentChannel = ch;
-                playChannel(ch);
-                renderChannels();
-            };
-            channelsStrip.appendChild(card);
+        lastHeight = window.innerHeight;
+    });
+    
+    if (isIOS) {
+        document.addEventListener('gesturestart', function(e) {
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                e.preventDefault();
+            }
         });
     }
-
-    function renderCategories() {
-        tabsContainer.innerHTML = '';
-        for (const cat of Object.keys(categories)) {
-            const tab = document.createElement('button');
-            tab.className = 'category-tab';
-            if (cat === currentCategory && !isSearchMode) tab.classList.add('active');
-            tab.innerHTML = `<span>${cat === 'HBO' ? '🎬' : cat === 'Universal' ? '🌍' : cat === 'Series' ? '📺' : cat === 'Documentales' ? '🌿' : cat === 'Infantiles' ? '🧸' : cat === 'Películas' ? '🎥' : cat === 'Deportes' ? '⚽' : '🎵'}</span><span>${cat}</span>`;
-            tab.onclick = () => {
-                if (isSearchMode) {
-                    searchInput.value = "";
-                    searchQuery = "";
-                    isSearchMode = false;
-                    clearSearchBtn.classList.remove('visible');
-                }
-                currentCategory = cat;
-                renderCategories();
-                renderChannels();
-                const firstChannel = categories[cat]?.[0];
-                if (firstChannel) {
-                    currentChannel = firstChannel;
-                    playChannel(firstChannel);
-                }
-            };
-            tabsContainer.appendChild(tab);
-        }
-    }
-
-    function performSearch(query) {
-        searchQuery = query;
-        isSearchMode = query.length > 0;
-        if (isSearchMode) {
-            clearSearchBtn.classList.add('visible');
-        } else {
-            clearSearchBtn.classList.remove('visible');
-        }
-        renderCategories();
-        renderChannels();
-        
-        if (isSearchMode) {
-            const results = rawChannels.filter(c => c.name.toLowerCase().includes(query.toLowerCase()));
-            if (results.length > 0 && currentChannel !== results[0]) {
-                currentChannel = results[0];
-                playChannel(results[0]);
-            }
-        }
-    }
-
-    function clearSearch() {
-        searchInput.value = "";
-        performSearch("");
-    }
-
-    searchInput.addEventListener('input', (e) => performSearch(e.target.value));
-    clearSearchBtn.addEventListener('click', clearSearch);
-
-    // Auto-detectar si estamos en GitHub Pages
-    if (window.location.hostname.includes('github.io')) {
-        setTimeout(() => {
-            if (loadErrorCount > 0) {
-                solutionBox.style.display = 'block';
-            }
-        }, 3000);
-    }
-
-    // Inicializar
-    renderCategories();
-    renderChannels();
     
-    // Auto-reproducir primer canal
-    const firstChannel = categories[currentCategory]?.[0];
-    if (firstChannel) {
-        currentChannel = firstChannel;
-        playChannel(firstChannel);
+    // Lista de canales Sr. Regio
+    const rawChannelsTV05 = [
+        { name: "HBO", group: "HBO", url: "http://45.5.119.43:4000/play/a0l2/index.m3u8", emoji: "🎬", num: 101 },
+        { name: "HBO 2", group: "HBO", url: "http://45.5.119.43:4000/play/a00c/index.m3u8", emoji: "🎥", num: 102 },
+        { name: "HBO Family", group: "HBO", url: "http://45.5.119.43:4000/play/a0l5/index.m3u8", emoji: "👨‍👩‍👧", num: 103 },
+        { name: "HBO Plus HDTV", group: "HBO", url: "http://45.5.119.43:4000/play/a0l4/index.m3u8", emoji: "⭐", num: 104 },
+        { name: "HBO XREME HDTV", group: "HBO", url: "http://45.5.119.43:4000/play/a0l6/index.m3u8", emoji: "⚡", num: 105 },
+        { name: "UNIVERSAL CHANNEL", group: "Universal", url: "http://45.5.119.43:4000/play/a0ih/index.m3u8", emoji: "🌍", num: 201 },
+        { name: "UNIVERSAL CINEMA", group: "Universal", url: "http://45.5.119.43:4000/play/a0kt/index.m3u8", emoji: "🎞️", num: 202 },
+        { name: "UNIVERSAL COMEDY", group: "Universal", url: "http://45.5.119.43:4000/play/a0i5/index.m3u8", emoji: "😂", num: 203 },
+        { name: "UNIVERSAL PREMIERE", group: "Universal", url: "http://45.5.119.43:4000/play/a0i1/index.m3u8", emoji: "🌟", num: 204 },
+        { name: "UNIVERSAL REALITY", group: "Universal", url: "http://45.5.119.43:4000/play/a0i3/index.m3u8", emoji: "📺", num: 205 },
+        { name: "UNIVERSAL CRIME", group: "Universal", url: "http://45.5.119.43:4000/play/a0i4/index.m3u8", emoji: "🔪", num: 206 },
+        { name: "Studio Universal", group: "Universal", url: "http://45.5.119.43:4000/play/a0ih/index.m3u8", emoji: "🎬", num: 207 },
+        { name: "A&E Latinoamerica", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0gt/index.m3u8", emoji: "📖", num: 301 },
+        { name: "AMCMXHD", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0gu/index.m3u8", emoji: "🎭", num: 302 },
+        { name: "AXN", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0iy/index.m3u8", emoji: "🔫", num: 303 },
+        { name: "Comedy Central", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0hy/index.m3u8", emoji: "🎙️", num: 304 },
+        { name: "FX latino", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0gw/index.m3u8", emoji: "🎬", num: 305 },
+        { name: "TNT", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0hu/index.m3u8", emoji: "⚔️", num: 306 },
+        { name: "TNT SERIES", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0km/index.m3u8", emoji: "📺", num: 307 },
+        { name: "TNT Novelas", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0g9/index.m3u8", emoji: "💖", num: 308 },
+        { name: "E! Entertainment HD", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0gr/index.m3u8", emoji: "✨", num: 309 },
+        { name: "Distrito Comedia", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a05l/index.m3u8", emoji: "😂", num: 310 },
+        { name: "UNICABLE", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0h8/index.m3u8", emoji: "🎭", num: 311 },
+        { name: "PARAMOUNT", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0kl/index.m3u8", emoji: "⛰️", num: 312 },
+        { name: "STAR latinoamerica", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0hn/index.m3u8", emoji: "⭐", num: 313 },
+        { name: "Sony", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0hp/index.m3u8", emoji: "🎮", num: 314 },
+        { name: "Space", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0iz/index.m3u8", emoji: "🚀", num: 315 },
+        { name: "SYFY", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0hp/index.m3u8", emoji: "👽", num: 316 },
+        { name: "Lifetime", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0gb/index.m3u8", emoji: "💜", num: 317 },
+        { name: "Warner Latinoamérica HD", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0ho/index.m3u8", emoji: "🦸", num: 318 },
+        { name: "Animal Planet HD", group: "Documentales", url: "http://45.5.119.43:4000/play/a0gq/index.m3u8", emoji: "🐘", num: 401 },
+        { name: "DHE", group: "Documentales", url: "http://45.5.119.43:4000/play/a0gy/index.m3u8", emoji: "🌎", num: 402 },
+        { name: "ID HD", group: "Documentales", url: "http://45.5.119.43:4000/play/a0ks/index.m3u8", emoji: "🔍", num: 403 },
+        { name: "Discovery World", group: "Documentales", url: "http://45.5.119.43:4000/play/a0kp/index.m3u8", emoji: "🌍", num: 404 },
+        { name: "Discovery Channel", group: "Documentales", url: "http://45.5.119.43:4000/play/a0kn/index.m3u8", emoji: "📡", num: 405 },
+        { name: "Discovery Theater HD", group: "Documentales", url: "http://45.5.119.43:4000/play/a0hv/index.m3u8", emoji: "🎭", num: 406 },
+        { name: "Discovery Turbo", group: "Documentales", url: "http://45.5.119.43:4000/play/a0ia/index.m3u8", emoji: "🏎️", num: 407 },
+        { name: "Discovery Home & Health", group: "Documentales", url: "http://45.5.119.43:4000/play/a0hw/index.m3u8", emoji: "🏠", num: 408 },
+        { name: "TLC LATINOAMERICA", group: "Documentales", url: "http://45.5.119.43:4000/play/a0hh/index.m3u8", emoji: "🏡", num: 409 },
+        { name: "HISTORY", group: "Documentales", url: "http://45.5.119.43:4000/play/a0gk/index.m3u8", emoji: "📜", num: 410 },
+        { name: "H2LAHD", group: "Documentales", url: "http://45.5.119.43:4000/play/a0jp/index.m3u8", emoji: "🏛️", num: 411 },
+        { name: "NATIONAL GEOGRAPHIC", group: "Documentales", url: "http://45.5.119.43:4000/play/a0kk/index.m3u8", emoji: "🐆", num: 412 },
+        { name: "Discovery Science", group: "Documentales", url: "http://45.5.119.43:4000/play/a0kp/index.m3u8", emoji: "🔬", num: 413 },
+        { name: "Discovery Kids", group: "Infantiles", url: "http://45.5.119.43:4000/play/a03l/index.m3u8", emoji: "🧸", num: 501 },
+        { name: "Cartoon Network", group: "Infantiles", url: "http://45.5.119.43:4000/play/a0l0/index.m3u8", emoji: "🤖", num: 502 },
+        { name: "Disney Channel", group: "Infantiles", url: "http://45.5.119.43:4000/play/a0i8/index.m3u8", emoji: "🐭", num: 503 },
+        { name: "Disney junior", group: "Infantiles", url: "http://45.5.119.43:4000/play/a0g1/index.m3u8", emoji: "🧸", num: 504 },
+        { name: "Nick Jr", group: "Infantiles", url: "http://45.5.119.43:4000/play/a0fz/index.m3u8", emoji: "🐶", num: 505 },
+        { name: "Nickelodeon", group: "Infantiles", url: "http://45.5.119.43:4000/play/a0hs/index.m3u8", emoji: "🧽", num: 506 },
+        { name: "CINECANAL", group: "Películas", url: "http://45.5.119.43:4000/play/a0hq/index.m3u8", emoji: "🎥", num: 601 },
+        { name: "CINEMAX", group: "Películas", url: "http://45.5.119.43:4000/play/a0il/index.m3u8", emoji: "🍿", num: 602 },
+        { name: "Golden", group: "Películas", url: "http://45.5.119.43:4000/play/a0jv/index.m3u8", emoji: "🏆", num: 603 },
+        { name: "Golden Premier", group: "Películas", url: "http://45.5.119.43:4000/play/a0jv/index.m3u8", emoji: "⭐", num: 604 },
+        { name: "Film & Arts", group: "Películas", url: "http://45.5.119.43:4000/play/a0gs/index.m3u8", emoji: "🎨", num: 605 },
+        { name: "Sony Movies", group: "Películas", url: "http://45.5.119.43:4000/play/a03s/index.m3u8", emoji: "🎬", num: 606 },
+        { name: "Univision", group: "General", url: "http://45.5.119.43:4000/play/a0kr/index.m3u8", emoji: "🇲🇽", num: 801 },
+        { name: "Telemundo", group: "General", url: "http://45.5.119.43:4000/play/a0gv/index.m3u8", emoji: "🇺🇸", num: 802 },
+        { name: "Exa TV", group: "Música", url: "http://45.5.119.43:4000/play/a0hk/index.m3u8", emoji: "🎤", num: 901 },
+        { name: "HTV", group: "Música", url: "http://45.5.119.43:4000/play/a0hk/index.m3u8", emoji: "🎵", num: 902 },
+        { name: "MTV", group: "Música", url: "http://45.5.119.43:4000/play/a0if/index.m3u8", emoji: "🎶", num: 903 },
+        { name: "MTV 00s", group: "Música", url: "http://45.5.119.43:4000/play/a0i0/index.m3u8", emoji: "📼", num: 904 },
+        { name: "MTV LIVE", group: "Música", url: "http://45.5.119.43:4000/play/a0if/index.m3u8", emoji: "🎸", num: 905 },
+        { name: "BANDAMAX", group: "Música", url: "http://45.5.119.43:4000/play/a0hk/index.m3u8", emoji: "🎺", num: 906 },
+        { name: "Claro Sports HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a0kz/index.m3u8", emoji: "⚽", num: 1001 },
+        { name: "Claro Sports 3 HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a024/index.m3u8", emoji: "⚽", num: 1002 },
+        { name: "ESPN HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a052/index.m3u8", emoji: "🏈", num: 1003 },
+        { name: "ESPN 2 HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a053/index.m3u8", emoji: "🏀", num: 1004 },
+        { name: "ESPN 3 HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a054/index.m3u8", emoji: "⚾", num: 1005 },
+        { name: "ESPN 4 HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a028/index.m3u8", emoji: "🏒", num: 1006 },
+        { name: "ESPN 5 HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a0ix/index.m3u8", emoji: "🎾", num: 1007 },
+        { name: "ESPN 6 HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a0kj/index.m3u8", emoji: "🏉", num: 1008 },
+        { name: "Golf Channel HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a0h1/index.m3u8", emoji: "⛳", num: 1009 },
+        { name: "Tigo Sports HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a02v/index.m3u8", emoji: "📡", num: 1010 },
+        { name: "BEIN SPORTS Ñ", group: "Deportes", url: "http://45.5.119.43:4000/play/a05s/index.m3u8", emoji: "⚽", num: 1011 },
+        { name: "SKY SPORTS", group: "Deportes", url: "http://45.5.119.43:4000/play/a05r/index.m3u8", emoji: "📺", num: 1012 },
+        { name: "TUDN", group: "Deportes", url: "http://45.5.119.43:4000/play/a05q/index.m3u8", emoji: "📡", num: 1013 },
+        { name: "TIGO GT", group: "Deportes", url: "http://45.5.119.43:4000/play/a05t/index.m3u8", emoji: "🏆", num: 1014 }
+    ];
+
+    // Lista de canales TecnoTV
+    const rawChannelsTV055 = [
+        { name: "HBO HD", group: "HBO", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0l2&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎬", num: 1 },
+        { name: "HBO2 HD", group: "HBO", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a00c&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎥", num: 2 },
+        { name: "HBO Family HD", group: "HBO", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0l5&token=tecnotokenplustv230516F&f=.m3u8", emoji: "👨‍👩‍👧", num: 3 },
+        { name: "HBO Plus HD", group: "HBO", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0l4&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⭐", num: 4 },
+        { name: "HBO XTREME HD", group: "HBO", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0l6&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⚡", num: 5 },
+        { name: "UNIVERSAL", group: "Universal", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0ih&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🌍", num: 6 },
+        { name: "UNIVERSAL CINEMA HD", group: "Universal", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0kt&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎞️", num: 7 },
+        { name: "UNIVERSAL COMEDY HD", group: "Universal", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0i5&token=tecnotokenplustv230516F&f=.m3u8", emoji: "😂", num: 8 },
+        { name: "UNIVERSAL CRIME HD", group: "Universal", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0i4&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🔪", num: 9 },
+        { name: "UNIVERSAL REALITY HD", group: "Universal", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0i3&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📺", num: 10 },
+        { name: "ESTRENO UNIVERSAL HD", group: "Universal", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0i1&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🌟", num: 11 },
+        { name: "A&E HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gt&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📖", num: 12 },
+        { name: "AMC HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gu&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎭", num: 13 },
+        { name: "AXN HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0iy&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🔫", num: 14 },
+        { name: "FX HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gw&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎬", num: 15 },
+        { name: "TNT HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hu&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⚔️", num: 16 },
+        { name: "TNT SERIES HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0km&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📺", num: 17 },
+        { name: "TNT Novelas", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0g9&token=tecnotokenplustv230516F&f=.m3u8", emoji: "💖", num: 18 },
+        { name: "E! Entertainment HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gr&token=tecnotokenplustv230516F&f=.m3u8", emoji: "✨", num: 19 },
+        { name: "DISTRITO COMEDIA", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a05l&token=tecnotokenplustv230516F&f=.m3u8", emoji: "😂", num: 20 },
+        { name: "SPACE HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0iz&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🚀", num: 21 },
+        { name: "WARNER HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0ho&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🦸", num: 22 },
+        { name: "Animal Planet HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gq&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🐘", num: 23 },
+        { name: "DHE HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gy&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🌎", num: 24 },
+        { name: "Discovery Channel HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0kn&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📡", num: 25 },
+        { name: "Discovery ID HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0ks&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🔍", num: 26 },
+        { name: "Discovery World HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0kp&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🌍", num: 27 },
+        { name: "DISCOVERY THEATHER HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hv&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎭", num: 28 },
+        { name: "Discovery Turbo", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0ia&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏎️", num: 29 },
+        { name: "Home & Health HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hw&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏠", num: 30 },
+        { name: "TLC", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hh&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏡", num: 31 },
+        { name: "History Channel HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gk&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📜", num: 32 },
+        { name: "History 2", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0jp&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏛️", num: 33 },
+        { name: "Nat Geo HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0kk&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🐆", num: 34 },
+        { name: "Cartoon Network", group: "Infantiles", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a029&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🤖", num: 35 },
+        { name: "Disney channel", group: "Infantiles", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0i8&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🐭", num: 36 },
+        { name: "Discovery Kids", group: "Infantiles", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a03l&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🧸", num: 37 },
+        { name: "Disney JR", group: "Infantiles", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0g1&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🐭", num: 38 },
+        { name: "Nickelodeon", group: "Infantiles", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0i9&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🧽", num: 39 },
+        { name: "CINECANAL HD", group: "Películas", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hq&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎥", num: 40 },
+        { name: "CineMax", group: "Películas", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0il&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🍿", num: 41 },
+        { name: "Golden", group: "Películas", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0jv&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏆", num: 42 },
+        { name: "Film & arts HD", group: "Películas", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gs&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎨", num: 43 },
+        { name: "SONY MOVIES HD", group: "Películas", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a03s&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎬", num: 44 },
+        { name: "Univision HD", group: "General", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0kr&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🇲🇽", num: 45 },
+        { name: "Telemundo HD", group: "General", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gv&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🇺🇸", num: 46 },
+        { name: "Exa TV", group: "Música", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hk&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎤", num: 47 },
+        { name: "Claro Sports HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0kz&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⚽", num: 48 },
+        { name: "Claro Sports 3 HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a024&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⚽", num: 49 },
+        { name: "ESPN HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a052&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏈", num: 50 },
+        { name: "ESPN 2 HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a053&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏀", num: 51 },
+        { name: "ESPN 3 HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a054&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⚾", num: 52 },
+        { name: "ESPN 4 HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a028&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏒", num: 53 },
+        { name: "ESPN 5 HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0ix&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎾", num: 54 },
+        { name: "ESPN 6 HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0kj&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏉", num: 55 },
+        { name: "Golf Channel HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0h1&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⛳", num: 56 },
+        { name: "Tigo Sports HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a02v&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📡", num: 57 },
+        { name: "SKY SPORTS", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a05r&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📺", num: 58 },
+        { name: "TUDN", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a05q&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📡", num: 59 },
+        { name: "TIGO GT", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a05t&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏆", num: 60 },
+        { name: "STAR CHANNEL HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hn&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⭐", num: 61 },
+        { name: "STAR LIFE", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0g4&token=tecnotokenplustv230516F&f=.m3u8", emoji: "✨", num: 62 },
+        { name: "SONY HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hp&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎮", num: 63 }
+    ];
+
+    // Normalización y fusión
+    function normalizeName(n) { return n.toLowerCase().replace(/[™®·]/g,'').replace(/\bhd\b|\bhdtv\b|\blatinoamerica\b|\bmx\b/gi,'').replace(/\s+/g,' ').trim().replace(/\b(\w+)\s+(\d+)\b/,'$1$2'); }
+    const urlMap = new Map();
+    rawChannelsTV05.forEach(ch => { let norm = normalizeName(ch.name); if(!urlMap.has(norm)) urlMap.set(norm, { url05: ch.url, url055: null, name05: ch.name, group05: ch.group }); else urlMap.get(norm).url05 = ch.url; });
+    rawChannelsTV055.forEach(ch => { let norm = normalizeName(ch.name); if(!urlMap.has(norm)) urlMap.set(norm, { url05: null, url055: ch.url, name055: ch.name, group055: ch.group }); else { let e=urlMap.get(norm); e.url055=ch.url; e.name055=ch.name; e.group055=ch.group; } });
+    
+    const unifiedChannels = [];
+    let idGen = 1;
+    for (let [norm, data] of urlMap) {
+        let group = data.group05 || data.group055 || "General";
+        let displayName = data.name05 || data.name055 || norm;
+        unifiedChannels.push({ id: idGen++, name: displayName, group, normName: norm, url05: data.url05, url055: data.url055, hasBoth: !!(data.url05 && data.url055) });
     }
+    const groups = {};
+    unifiedChannels.forEach(ch => { if(!groups[ch.group]) groups[ch.group] = []; groups[ch.group].push(ch); });
+    const groupIcons = { "HBO":"🎬","Universal":"🌍","Series y Entretenimiento":"📺","Documentales":"🌿","Infantiles":"🧸","Películas":"🎥","General":"📡","Música":"🎵","Deportes":"⚽" };
+    const CATEGORIES = Object.fromEntries(Object.entries(groups).map(([gName, chs]) => [gName, { icon: groupIcons[gName] || "📺", channels: chs }]));
+    
+    let currentCategory = Object.keys(CATEGORIES)[0];
+    let currentChannel = unifiedChannels[0];
+    let currentSource = currentChannel?.url05 ? "05" : "055";
+    let searchQuery = "", isSearchMode = false, filteredCh = [];
+    let currentHls = null, loadingTimeout = null, videoPlaying = false;
+    
+    const tabsC = document.getElementById('tabsContainer'), strip = document.getElementById('channelsStrip');
+    const videoFrame = document.getElementById('videoFrame'), player = document.getElementById('playerVideo');
+    const searchInp = document.getElementById('searchInput'), clearBtn = document.getElementById('clearSearchBtn');
+    const selDiv = document.getElementById('sourceSelector'), src1 = document.getElementById('source1Btn'), src2 = document.getElementById('source2Btn');
+    
+    function loadingOverlay(chName) { 
+        let d = document.createElement('div'); 
+        d.className='loading-overlay'; 
+        d.innerHTML=`<div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">🔴 CARGANDO ${chName}</div><div class="loading-sub">Estableciendo conexión HD...</div>`; 
+        return d; 
+    }
+    function removeLoad() { 
+        if(window._curLoad && window._curLoad.parentElement) window._curLoad.remove(); 
+        window._curLoad=null; 
+        if(loadingTimeout) clearTimeout(loadingTimeout); 
+        loadingTimeout=null; 
+    }
+    function showLoad(chName) { 
+        videoPlaying=false; 
+        removeLoad(); 
+        let ov=loadingOverlay(chName); 
+        videoFrame.style.position='relative'; 
+        videoFrame.appendChild(ov); 
+        window._curLoad=ov; 
+        loadingTimeout=setTimeout(()=>{ 
+            if(window._curLoad && !videoPlaying) removeLoad(); 
+        }, 12000); 
+    }
+    function hideLoad() { removeLoad(); }
+    function updateSourceVis() { if(currentChannel?.hasBoth) selDiv.classList.add('visible'); else selDiv.classList.remove('visible'); }
+    function playChannel(ch, src) { 
+        let url=src==="05"?ch.url05:ch.url055; 
+        if(!url) return; 
+        if(currentHls){ currentHls.destroy(); currentHls=null; } 
+        videoFrame.classList.remove('welcome-mode'); 
+        videoFrame.classList.add('video-mode'); 
+        showLoad(ch.name); 
+        player.pause(); 
+        player.removeAttribute('src'); 
+        player.load(); 
+        let onPlay=()=>{ 
+            videoPlaying=true; 
+            hideLoad(); 
+            player.removeEventListener('playing',onPlay); 
+            player.removeEventListener('canplay',onPlay); 
+        }; 
+        player.addEventListener('playing',onPlay); 
+        player.addEventListener('canplay',onPlay); 
+        player.onerror=()=>{ hideLoad(); }; 
+        if(url.includes('.m3u8') && Hls.isSupported()){ 
+            currentHls=new Hls({debug:false, enableWorker:true}); 
+            currentHls.loadSource(url); 
+            currentHls.attachMedia(player); 
+            currentHls.on(Hls.Events.MANIFEST_PARSED,()=>player.play().catch(e=>console.log)); 
+            currentHls.on(Hls.Events.ERROR,(_,d)=> { 
+                if(d.fatal && d.type===Hls.ErrorTypes.NETWORK_ERROR){ 
+                    player.src=url; 
+                    player.play().catch(e=>console.log); 
+                } 
+            }); 
+        } else { 
+            player.src=url; 
+            player.play().catch(e=>console.log); 
+        } 
+    }
+    function updateUI(){ playChannel(currentChannel, currentSource); document.querySelectorAll('.channel-card-horizontal').forEach(c=>c.classList.toggle('active',parseInt(c.dataset.id)===currentChannel.id)); updateSourceVis(); src1.classList.toggle('active',currentSource==="05"); src2.classList.toggle('active',currentSource==="055"); }
+    function switchSource(newSrc){ if(currentSource===newSrc || !currentChannel?.hasBoth) return; currentSource=newSrc; updateUI(); }
+    function renderChannels(){ let arr = (isSearchMode && searchQuery.trim()) ? filteredCh : (CATEGORIES[currentCategory]?.channels||[]); strip.innerHTML=''; if(arr.length===0){ strip.innerHTML='<div class="no-results">📺 Sin resultados</div>'; return; } arr.forEach(ch=>{ let card=document.createElement('div'); card.className='channel-card-horizontal'; if(ch.id===currentChannel?.id) card.classList.add('active'); card.dataset.id=ch.id; card.innerHTML=`<div class="ch-num-h">${ch.id}</div><div class="ch-info-h"><div class="ch-name-h">${ch.name}</div><div class="ch-cat-h">${ch.group}</div></div>`; card.addEventListener('click',()=>{ if(currentChannel?.id===ch.id) return; currentChannel=ch; currentSource = ch.url05?(ch.url055?"05":"05"):"055"; updateUI(); }); strip.appendChild(card); }); setTimeout(()=>{ let act=document.querySelector('.channel-card-horizontal.active'); if(act) act.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}); },30); }
+    function performSearch(q){ searchQuery=q.toLowerCase().trim(); if(!searchQuery){ isSearchMode=false; clearBtn.classList.remove('visible'); document.querySelectorAll('.category-tab').forEach(t=>t.classList.toggle('active',t.dataset.category===currentCategory)); } else { isSearchMode=true; clearBtn.classList.add('visible'); filteredCh=unifiedChannels.filter(c=>c.name.toLowerCase().includes(searchQuery)); if(filteredCh.length && (!currentChannel || !filteredCh.some(c=>c.id===currentChannel.id))){ currentChannel=filteredCh[0]; currentSource = currentChannel.url05?"05":"055"; updateUI(); } document.querySelectorAll('.category-tab').forEach(t=>t.classList.remove('active')); } renderChannels(); }
+    function renderTabs(){ tabsC.innerHTML=''; for(let [cat,data] of Object.entries(CATEGORIES)){ let btn=document.createElement('button'); btn.className='category-tab'; if(cat===currentCategory && !isSearchMode) btn.classList.add('active'); btn.dataset.category=cat; btn.innerHTML=`<span class="tab-icon">${data.icon}</span><span>${cat}</span>`; btn.onclick=()=>{ if(isSearchMode){ searchInp.value=''; performSearch(''); } currentCategory=cat; document.querySelectorAll('.category-tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active'); let first=CATEGORIES[cat]?.channels[0]; if(first){ currentChannel=first; currentSource=first.url05?"05":"055"; updateUI(); } renderChannels(); }; tabsC.appendChild(btn); } }
+    searchInp.addEventListener('input',e=>performSearch(e.target.value)); clearBtn.onclick=()=>{ searchInp.value=''; performSearch(''); }; src1.onclick=()=>switchSource("05"); src2.onclick=()=>switchSource("055");
+    renderTabs(); renderChannels(); videoFrame.classList.add('welcome-mode'); if(unifiedChannels[0]) { currentChannel=unifiedChannels[0]; currentSource=currentChannel.url05?"05":"055"; updateUI(); }
+    updateSourceVis();
+    
+    document.body.classList.remove('light');
 </script>
 </body>
 </html>
