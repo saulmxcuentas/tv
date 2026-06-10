@@ -1,946 +1,589 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>SKIN TV · IPTV Premium</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+#EXTM3U
+#EXT-X-SESSION-DATA:DATA-ID="com.xui.1_5_5r2"
 
-        body {
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
-            min-height: 100vh;
-            background: #0a0c10;
-            overflow-x: hidden;
-        }
+# ====================== CINE ======================
 
-        :root {
-            --bg-page: #0a0c10;
-            --card-bg: #14171c;
-            --sidebar-bg: rgba(20, 23, 28, 0.96);
-            --panel-bg: #1e2128;
-            --text-primary: #f0f2f5;
-            --text-secondary: #9ca3af;
-            --border-light: #2d3139;
-            --accent: #e63946;
-            --accent-hover: #c1121f;
-            --accent-soft: #2d1a1f;
-            --video-placeholder: #1a1d24;
-            --shadow-md: 0 20px 35px -12px rgba(0, 0, 0, 0.5);
-            --scrollbar-track: #1e2128;
-            --scrollbar-thumb: #2d3139;
-            --search-bg: #1a1d24;
-            --option-bg: #1e2128;
-        }
+#EXTINF:-1 tvg-id="385" tvg-name="385 HBO FHD" tvg-logo="https://bestleague.world/img/hbo.webp" group-title="CINE",385 HBO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/90.ts
 
-        .app-layout {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            max-width: 1600px;
-            margin: 0 auto;
-            width: 100%;
-        }
+#EXTINF:-1 tvg-id="390" tvg-name="390 HBO 2 FHD" tvg-logo="https://bestleague.world/img/hbo2.webp" group-title="CINE",390 HBO 2 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/91.ts
 
-        .top-controls {
-            background: var(--sidebar-bg);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border-light);
-            position: sticky;
-            top: 0;
-            z-index: 30;
-            padding: 0.6rem 1rem 0 1rem;
-        }
-        
-        .search-row {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 0.5rem;
-            padding-bottom: 0.4rem;
-            border-bottom: 1px solid var(--border-light);
-        }
-        
-        .search-box {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--search-bg);
-            border: 1px solid var(--border-light);
-            border-radius: 2rem;
-            padding: 0.4rem 1rem;
-            width: min(280px, 70%);
-            transition: all 0.2s;
-        }
-        .search-box:focus-within {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px var(--accent-soft);
-        }
-        .search-box input {
-            background: transparent;
-            border: none;
-            outline: none;
-            font-size: 0.85rem;
-            color: var(--text-primary);
-            width: 100%;
-            font-family: inherit;
-        }
-        .search-box input::placeholder {
-            color: var(--text-secondary);
-            opacity: 0.7;
-        }
-        .search-icon {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-        .clear-search {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 1rem;
-            padding: 0 0.2rem;
-            display: none;
-        }
-        .clear-search.visible {
-            display: block;
-        }
-        .clear-search:hover {
-            color: var(--accent);
-        }
-        
-        .categories-tab-bar {
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: thin;
-            margin-top: 0.2rem;
-            padding-bottom: 0.2rem;
-        }
-        .categories-tab-bar::-webkit-scrollbar {
-            height: 3px;
-        }
-        .tabs-container {
-            display: flex;
-            gap: 0.2rem;
-        }
-        .category-tab {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.5rem 1rem;
-            background: transparent;
-            border: none;
-            border-radius: 2rem 2rem 0 0;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            border-bottom: 2px solid transparent;
-        }
-        .category-tab:hover {
-            color: var(--accent);
-            background: var(--accent-soft);
-        }
-        .category-tab.active {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
-            background: var(--accent-soft);
-        }
-        .tab-icon {
-            font-size: 1rem;
-        }
+#EXTINF:-1 tvg-id="391" tvg-name="391 HBO FAMILY FHD" tvg-logo="https://tele-libre.org/img/hbofam.webp" group-title="CINE",391 HBO FAMILY FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/93.ts
 
-        .channels-strip-container {
-            background: var(--sidebar-bg);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid var(--border-light);
-            padding: 0.7rem 1rem;
-            overflow-x: auto;
-            scrollbar-width: thin;
-            position: sticky;
-            top: 72px;
-            z-index: 20;
-        }
-        .channels-strip-container::-webkit-scrollbar {
-            height: 4px;
-        }
-        .channels-strip {
-            display: flex;
-            gap: 0.7rem;
-            flex-wrap: nowrap;
-        }
-        .channel-card-horizontal {
-            background: var(--panel-bg);
-            border-radius: 0.9rem;
-            padding: 0.5rem 0.9rem;
-            min-width: 130px;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            cursor: pointer;
-            border: 1px solid var(--border-light);
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-        .channel-card-horizontal:hover {
-            transform: translateY(-2px);
-            border-color: var(--accent);
-            background: var(--accent-soft);
-        }
-        .channel-card-horizontal.active {
-            border-left: 3px solid var(--accent);
-            background: var(--accent-soft);
-            border-color: var(--accent);
-        }
-        .ch-num-h {
-            font-weight: 700;
-            font-size: 0.75rem;
-            background: var(--card-bg);
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.7rem;
-            color: var(--accent);
-            font-family: monospace;
-        }
-        .ch-info-h {
-            flex: 1;
-            overflow: hidden;
-        }
-        .ch-name-h {
-            font-weight: 600;
-            font-size: 0.75rem;
-            color: var(--text-primary);
-            white-space: nowrap;
-            overflow-x: hidden;
-            text-overflow: ellipsis;
-            max-width: 110px;
-        }
-        .ch-cat-h {
-            font-size: 0.55rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
+#EXTINF:-1 tvg-id="399" tvg-name="399 HBO PLUS FHD" tvg-logo="https://tele-libre.org/img/hboplus.webp" group-title="CINE",399 HBO PLUS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/92.ts
 
-        .no-results {
-            padding: 1rem;
-            text-align: center;
-            color: var(--text-secondary);
-            width: 100%;
-            font-size: 0.8rem;
-        }
+#EXTINF:-1 tvg-id="411" tvg-name="411 HBO XTREME FHD" tvg-logo="https://bestleague.world/img/hboxtreme.webp" group-title="CINE",409 HBO XTREME FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/98.ts
 
-        .main-content {
-            flex: 1;
-            padding: 1rem 1.2rem 1.5rem 1.2rem;
-        }
-        
-        .logo-compact {
-            text-align: center;
-            margin-bottom: 0.5rem;
-        }
-        .logo-compact h1 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #f0f2f5 0%, #e63946 70%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-bottom: 0;
-        }
-        
-        .logo-compact span {
-            display: none;
-        }
+#EXTINF:-1 tvg-id="401" tvg-name="401 HBO POP FHD" tvg-logo="https://tele-libre.org/img/hbopop.webp" group-title="CINE",401 HBO POP FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/94.ts
 
-        .screen-wrapper {
-            background: var(--card-bg);
-            border-radius: 1.2rem;
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-light);
-            margin-top: 0.8rem;
-            width: 100%;
-        }
-        .video-frame {
-            background: #000;
-            aspect-ratio: 16 / 9;
-            width: 100%;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .video-frame video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background: #000;
-            display: block;
-        }
-        
-        video::-webkit-media-controls-fullscreen-button {
-            display: block;
-        }
-        
-        video:-webkit-full-page-media {
-            max-height: 100%;
-        }
-        
-        .welcome-screen {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-            text-align: center;
-            padding: 1rem;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background: var(--video-placeholder);
-            z-index: 5;
-        }
-        .welcome-screen div:first-child { font-size: 2.5rem; }
-        .welcome-screen div:nth-child(2) { font-size: 1rem; font-weight: 500; }
-        .welcome-screen div:nth-child(3) { font-size: 0.7rem; }
-        
-        .video-frame.welcome-mode .welcome-screen { display: flex; }
-        .video-frame.welcome-mode video { display: none; }
-        .video-frame.video-mode .welcome-screen { display: none; }
-        .video-frame.video-mode video { display: block; }
-        
-        .loading-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000000dd;
-            backdrop-filter: blur(12px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 40;
-            gap: 0.8rem;
-            border-radius: 0;
-        }
-        .loading-dots {
-            display: flex;
-            gap: 0.6rem;
-            align-items: center;
-            justify-content: center;
-        }
-        .loading-dots span {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background-color: var(--accent);
-            animation: bounce 1.4s infinite ease-in-out both;
-            box-shadow: 0 0 6px rgba(230,57,70,0.6);
-        }
-        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
-        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
-        .loading-text {
-            color: white;
-            font-size: 1rem;
-            font-weight: 600;
-            text-align: center;
-            letter-spacing: 0.5px;
-            text-shadow: 0 1px 2px black;
-        }
-        .loading-sub {
-            color: #ffccd0;
-            font-size: 0.75rem;
-            font-weight: 500;
-            background: rgba(0,0,0,0.4);
-            padding: 0.2rem 0.8rem;
-            border-radius: 2rem;
-        }
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0.5); opacity: 0.5; }
-            40% { transform: scale(1); opacity: 1; }
-        }
-        
-        .source-selector {
-            display: none;
-            gap: 0.8rem;
-            justify-content: center;
-            margin-top: 0.8rem;
-            margin-bottom: 0.3rem;
-            flex-wrap: wrap;
-        }
-        .source-selector.visible {
-            display: flex;
-        }
-        .source-btn {
-            background: var(--option-bg);
-            border: 1px solid var(--border-light);
-            border-radius: 2rem;
-            padding: 0.4rem 1.2rem;
-            font-size: 0.7rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--text-secondary);
-            font-family: inherit;
-        }
-        .source-btn.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
-        }
-        
-        .footer-note {
-            display: none;
-        }
+#EXTINF:-1 tvg-id="406" tvg-name="406 HBO SIGNATURE FHD" tvg-logo="https://telelibree.com/img/hbosig.webp" group-title="CINE",406 HBO SIGNATURE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/97.ts
 
-        @media (min-width: 768px) {
-            .top-controls {
-                padding: 0.8rem 1.8rem 0 1.8rem;
-            }
-            .search-box {
-                width: 320px;
-                padding: 0.5rem 1.2rem;
-            }
-            .category-tab {
-                padding: 0.7rem 1.3rem;
-                font-size: 0.85rem;
-            }
-            .channels-strip-container {
-                padding: 0.9rem 1.8rem;
-            }
-            .channel-card-horizontal {
-                min-width: 170px;
-                padding: 0.6rem 1rem;
-            }
-            .ch-name-h {
-                font-size: 0.85rem;
-                max-width: 140px;
-            }
-            .ch-num-h {
-                width: 38px;
-                height: 38px;
-                font-size: 0.85rem;
-            }
-            .main-content {
-                padding: 1.5rem 2rem 1.5rem 2rem;
-            }
-            .logo-compact h1 {
-                font-size: 2rem;
-            }
-            .source-btn {
-                padding: 0.5rem 1.8rem;
-                font-size: 0.8rem;
-            }
-            .loading-text {
-                font-size: 1.1rem;
-            }
-            .loading-sub {
-                font-size: 0.8rem;
-            }
-        }
+#EXTINF:-1 tvg-id="742" tvg-name="742 UNIVERSAL CINEMA FHD" tvg-logo="https://bestleague.world/img/universalcinema.webp" group-title="CINE",742 UNIVERSAL CINEMA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/121.ts
 
-        @media (min-width: 1024px) {
-            .app-layout {
-                flex-direction: row;
-                flex-wrap: wrap;
-                align-items: flex-start;
-                gap: 1rem;
-                padding: 1rem 1.5rem;
-            }
-            .top-controls {
-                position: sticky;
-                top: 1rem;
-                width: 320px;
-                flex-shrink: 0;
-                border-radius: 1.2rem;
-                border: 1px solid var(--border-light);
-                backdrop-filter: blur(16px);
-                padding: 1rem;
-                margin: 0;
-                background: var(--sidebar-bg);
-                order: 1;
-                height: fit-content;
-                max-height: 90vh;
-                overflow-y: auto;
-            }
-            .search-row {
-                justify-content: flex-start;
-                border-bottom: none;
-                margin-bottom: 0.8rem;
-            }
-            .search-box {
-                width: 100%;
-            }
-            .categories-tab-bar {
-                margin-bottom: 1rem;
-                overflow-x: visible;
-                white-space: normal;
-            }
-            .tabs-container {
-                flex-wrap: wrap;
-                gap: 0.4rem;
-            }
-            .category-tab {
-                border-radius: 2rem;
-                border-bottom: none;
-                background: var(--panel-bg);
-                padding: 0.5rem 1rem;
-            }
-            .category-tab.active {
-                background: var(--accent);
-                color: white;
-                border-bottom: none;
-            }
-            .channels-strip-container {
-                position: relative;
-                top: 0;
-                background: transparent;
-                backdrop-filter: none;
-                padding: 0;
-                overflow-x: visible;
-                margin-top: 1rem;
-                border: none;
-            }
-            .channels-strip {
-                flex-direction: column;
-                flex-wrap: nowrap;
-                gap: 0.6rem;
-                max-height: 55vh;
-                overflow-y: auto;
-                padding-right: 0.5rem;
-            }
-            .channel-card-horizontal {
-                min-width: auto;
-                width: 100%;
-            }
-            .ch-name-h {
-                max-width: 180px;
-            }
-            .main-content {
-                flex: 1;
-                order: 2;
-                padding: 0;
-                min-width: 0;
-            }
-            .video-frame {
-                aspect-ratio: 16 / 9;
-            }
-            .source-selector {
-                justify-content: flex-start;
-            }
-            .logo-compact {
-                text-align: left;
-                margin-bottom: 0.8rem;
-            }
-        }
+#EXTINF:-1 tvg-id="744" tvg-name="744 UNIVERSAL COMEDY FHD" tvg-logo="https://bestleague.world/img/universalcomedy.webp" group-title="CINE",744 UNIVERSAL COMEDY FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/158.ts
 
-        @media (min-width: 768px) and (max-width: 1023px) and (orientation: landscape) {
-            .app-layout {
-                display: block;
-            }
-            .top-controls {
-                padding: 0.5rem 1rem 0 1rem;
-            }
-            .channels-strip-container {
-                top: 62px;
-            }
-            .main-content {
-                padding: 0.8rem 1rem 0.8rem 1rem;
-            }
-            .video-frame {
-                aspect-ratio: 16 / 9;
-                max-height: 70vh;
-            }
-            .channel-card-horizontal {
-                min-width: 140px;
-            }
-        }
+#EXTINF:-1 tvg-id="748" tvg-name="748 UNIVERSAL PREMIERE FHD" tvg-logo="https://bestleague.world/img/universalpremiere.webp" group-title="CINE",748 UNIVERSAL PREMIERE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/123.ts
 
-        @media (max-width: 480px) {
-            .top-controls {
-                padding: 0.4rem 0.8rem 0 0.8rem;
-            }
-            .channel-card-horizontal {
-                min-width: 110px;
-                padding: 0.4rem 0.7rem;
-            }
-            .ch-name-h {
-                font-size: 0.7rem;
-                max-width: 85px;
-            }
-            .ch-num-h {
-                width: 28px;
-                height: 28px;
-                font-size: 0.7rem;
-            }
-            .main-content {
-                padding: 0.8rem;
-            }
-            .logo-compact h1 {
-                font-size: 1.3rem;
-            }
-            .source-btn {
-                padding: 0.3rem 1rem;
-                font-size: 0.65rem;
-            }
-            .loading-text {
-                font-size: 0.85rem;
-            }
-            .loading-sub {
-                font-size: 0.6rem;
-            }
-        }
-    </style>
-</head>
-<body>
-<div class="app-layout">
-    <div class="top-controls">
-        <div class="search-row">
-            <div class="search-box">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="searchInput" placeholder="Buscar canal por nombre..." autocomplete="off">
-                <button class="clear-search" id="clearSearchBtn">✕</button>
-            </div>
-        </div>
-        <div class="categories-tab-bar" id="categoriesTabBar">
-            <div class="tabs-container" id="tabsContainer"></div>
-        </div>
-        <div class="channels-strip-container" id="channelsStripContainer">
-            <div class="channels-strip" id="channelsStrip"></div>
-        </div>
-    </div>
+#EXTINF:-1 tvg-id="746" tvg-name="746 UNIVERSAL CRIME FHD" tvg-logo="https://bestleague.world/img/universalcrime.webp" group-title="CINE",746 UNIVERSAL CRIME FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/208.ts
 
-    <main class="main-content">
-        <div class="logo-compact">
-            <h1>✦ SKIN TV ✦</h1>
-        </div>
+#EXTINF:-1 tvg-id="678" tvg-name="678 STUDIO UNIVERSAL FHD" tvg-logo="https://tele-libre.org/img/studio.webp" group-title="CINE",678 STUDIO UNIVERSAL FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/161.ts
 
-        <div class="screen-wrapper">
-            <div class="video-frame" id="videoFrame">
-                <div class="welcome-screen" id="welcomeScreen">
-                    <div>📺</div>
-                    <div style="font-weight: 500;">Bienvenido a SKIN TV</div>
-                    <div>Selecciona un canal y disfruta</div>
-                </div>
-                <video id="playerVideo" controls playsinline webkit-playsinline="true" x-webkit-airplay="deny" style="width: 100%; height: 100%; object-fit: contain; background: #000;"></video>
-            </div>
-        </div>
+#EXTINF:-1 tvg-id="" tvg-name="FM HOT MOVIES FHD" tvg-logo="https://www.telegratishd.com/imge/fmhotmovies.webp" group-title="CINE",FM HOT MOVIES FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/77.ts
 
-        <div class="source-selector" id="sourceSelector">
-            <button class="source-btn" id="source1Btn">🌐 Opción 1</button>
-            <button class="source-btn" id="source2Btn">🌐 Opción 2</button>
-        </div>
-    </main>
-</div>
+#EXTINF:-1 tvg-id="25" tvg-name="25 AMC FHD" tvg-logo="https://telelibree.com/img/amc.webp" group-title="CINE",25 AMC FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/159.ts
 
-<script>
-    // Prevención de fullscreen automático
-    let isFullscreenByUser = false;
-    const playerVideo = document.getElementById('playerVideo');
-    
-    playerVideo.setAttribute('playsinline', 'true');
-    playerVideo.setAttribute('webkit-playsinline', 'true');
-    
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    
-    function exitFullscreenIfNotUser() {
-        if (!isFullscreenByUser) {
-            if (document.fullscreenElement || document.webkitFullscreenElement) {
-                if (document.exitFullscreen) document.exitFullscreen();
-                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            }
-        }
-    }
-    
-    document.addEventListener('fullscreenchange', function() {
-        isFullscreenByUser = !!(document.fullscreenElement || document.webkitFullscreenElement);
-    });
-    document.addEventListener('webkitfullscreenchange', function() {
-        isFullscreenByUser = !!(document.webkitFullscreenElement);
-    });
-    
-    window.addEventListener('orientationchange', function() {
-        setTimeout(exitFullscreenIfNotUser, 100);
-    });
-    
-    let lastHeight = window.innerHeight;
-    window.addEventListener('resize', function() {
-        if (Math.abs(window.innerHeight - lastHeight) > 100) {
-            setTimeout(exitFullscreenIfNotUser, 50);
-        }
-        lastHeight = window.innerHeight;
-    });
-    
-    if (isIOS) {
-        document.addEventListener('gesturestart', function(e) {
-            if (document.fullscreenElement || document.webkitFullscreenElement) {
-                e.preventDefault();
-            }
-        });
-    }
-    
-    // Lista de canales Sr. Regio
-    const rawChannelsTV05 = [
-        { name: "HBO", group: "HBO", url: "http://45.5.119.43:4000/play/a0l2/index.m3u8", emoji: "🎬", num: 101 },
-        { name: "HBO 2", group: "HBO", url: "http://45.5.119.43:4000/play/a00c/index.m3u8", emoji: "🎥", num: 102 },
-        { name: "HBO Family", group: "HBO", url: "http://45.5.119.43:4000/play/a0l5/index.m3u8", emoji: "👨‍👩‍👧", num: 103 },
-        { name: "HBO Plus HDTV", group: "HBO", url: "http://45.5.119.43:4000/play/a0l4/index.m3u8", emoji: "⭐", num: 104 },
-        { name: "HBO XREME HDTV", group: "HBO", url: "http://45.5.119.43:4000/play/a0l6/index.m3u8", emoji: "⚡", num: 105 },
-        { name: "UNIVERSAL CHANNEL", group: "Universal", url: "http://45.5.119.43:4000/play/a0ih/index.m3u8", emoji: "🌍", num: 201 },
-        { name: "UNIVERSAL CINEMA", group: "Universal", url: "http://45.5.119.43:4000/play/a0kt/index.m3u8", emoji: "🎞️", num: 202 },
-        { name: "UNIVERSAL COMEDY", group: "Universal", url: "http://45.5.119.43:4000/play/a0i5/index.m3u8", emoji: "😂", num: 203 },
-        { name: "UNIVERSAL PREMIERE", group: "Universal", url: "http://45.5.119.43:4000/play/a0i1/index.m3u8", emoji: "🌟", num: 204 },
-        { name: "UNIVERSAL REALITY", group: "Universal", url: "http://45.5.119.43:4000/play/a0i3/index.m3u8", emoji: "📺", num: 205 },
-        { name: "UNIVERSAL CRIME", group: "Universal", url: "http://45.5.119.43:4000/play/a0i4/index.m3u8", emoji: "🔪", num: 206 },
-        { name: "Studio Universal", group: "Universal", url: "http://45.5.119.43:4000/play/a0ih/index.m3u8", emoji: "🎬", num: 207 },
-        { name: "A&E Latinoamerica", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0gt/index.m3u8", emoji: "📖", num: 301 },
-        { name: "AMCMXHD", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0gu/index.m3u8", emoji: "🎭", num: 302 },
-        { name: "AXN", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0iy/index.m3u8", emoji: "🔫", num: 303 },
-        { name: "Comedy Central", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0hy/index.m3u8", emoji: "🎙️", num: 304 },
-        { name: "FX latino", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0gw/index.m3u8", emoji: "🎬", num: 305 },
-        { name: "TNT", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0hu/index.m3u8", emoji: "⚔️", num: 306 },
-        { name: "TNT SERIES", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0km/index.m3u8", emoji: "📺", num: 307 },
-        { name: "TNT Novelas", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0g9/index.m3u8", emoji: "💖", num: 308 },
-        { name: "E! Entertainment HD", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0gr/index.m3u8", emoji: "✨", num: 309 },
-        { name: "Distrito Comedia", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a05l/index.m3u8", emoji: "😂", num: 310 },
-        { name: "UNICABLE", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0h8/index.m3u8", emoji: "🎭", num: 311 },
-        { name: "PARAMOUNT", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0kl/index.m3u8", emoji: "⛰️", num: 312 },
-        { name: "STAR latinoamerica", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0hn/index.m3u8", emoji: "⭐", num: 313 },
-        { name: "Sony", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0hp/index.m3u8", emoji: "🎮", num: 314 },
-        { name: "Space", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0iz/index.m3u8", emoji: "🚀", num: 315 },
-        { name: "SYFY", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0hp/index.m3u8", emoji: "👽", num: 316 },
-        { name: "Lifetime", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0gb/index.m3u8", emoji: "💜", num: 317 },
-        { name: "Warner Latinoamérica HD", group: "Series y Entretenimiento", url: "http://45.5.119.43:4000/play/a0ho/index.m3u8", emoji: "🦸", num: 318 },
-        { name: "Animal Planet HD", group: "Documentales", url: "http://45.5.119.43:4000/play/a0gq/index.m3u8", emoji: "🐘", num: 401 },
-        { name: "DHE", group: "Documentales", url: "http://45.5.119.43:4000/play/a0gy/index.m3u8", emoji: "🌎", num: 402 },
-        { name: "ID HD", group: "Documentales", url: "http://45.5.119.43:4000/play/a0ks/index.m3u8", emoji: "🔍", num: 403 },
-        { name: "Discovery World", group: "Documentales", url: "http://45.5.119.43:4000/play/a0kp/index.m3u8", emoji: "🌍", num: 404 },
-        { name: "Discovery Channel", group: "Documentales", url: "http://45.5.119.43:4000/play/a0kn/index.m3u8", emoji: "📡", num: 405 },
-        { name: "Discovery Theater HD", group: "Documentales", url: "http://45.5.119.43:4000/play/a0hv/index.m3u8", emoji: "🎭", num: 406 },
-        { name: "Discovery Turbo", group: "Documentales", url: "http://45.5.119.43:4000/play/a0ia/index.m3u8", emoji: "🏎️", num: 407 },
-        { name: "Discovery Home & Health", group: "Documentales", url: "http://45.5.119.43:4000/play/a0hw/index.m3u8", emoji: "🏠", num: 408 },
-        { name: "TLC LATINOAMERICA", group: "Documentales", url: "http://45.5.119.43:4000/play/a0hh/index.m3u8", emoji: "🏡", num: 409 },
-        { name: "HISTORY", group: "Documentales", url: "http://45.5.119.43:4000/play/a0gk/index.m3u8", emoji: "📜", num: 410 },
-        { name: "H2LAHD", group: "Documentales", url: "http://45.5.119.43:4000/play/a0jp/index.m3u8", emoji: "🏛️", num: 411 },
-        { name: "NATIONAL GEOGRAPHIC", group: "Documentales", url: "http://45.5.119.43:4000/play/a0kk/index.m3u8", emoji: "🐆", num: 412 },
-        { name: "Discovery Science", group: "Documentales", url: "http://45.5.119.43:4000/play/a0kp/index.m3u8", emoji: "🔬", num: 413 },
-        { name: "Discovery Kids", group: "Infantiles", url: "http://45.5.119.43:4000/play/a03l/index.m3u8", emoji: "🧸", num: 501 },
-        { name: "Cartoon Network", group: "Infantiles", url: "http://45.5.119.43:4000/play/a0l0/index.m3u8", emoji: "🤖", num: 502 },
-        { name: "Disney Channel", group: "Infantiles", url: "http://45.5.119.43:4000/play/a0i8/index.m3u8", emoji: "🐭", num: 503 },
-        { name: "Disney junior", group: "Infantiles", url: "http://45.5.119.43:4000/play/a0g1/index.m3u8", emoji: "🧸", num: 504 },
-        { name: "Nick Jr", group: "Infantiles", url: "http://45.5.119.43:4000/play/a0fz/index.m3u8", emoji: "🐶", num: 505 },
-        { name: "Nickelodeon", group: "Infantiles", url: "http://45.5.119.43:4000/play/a0hs/index.m3u8", emoji: "🧽", num: 506 },
-        { name: "CINECANAL", group: "Películas", url: "http://45.5.119.43:4000/play/a0hq/index.m3u8", emoji: "🎥", num: 601 },
-        { name: "CINEMAX", group: "Películas", url: "http://45.5.119.43:4000/play/a0il/index.m3u8", emoji: "🍿", num: 602 },
-        { name: "Golden", group: "Películas", url: "http://45.5.119.43:4000/play/a0jv/index.m3u8", emoji: "🏆", num: 603 },
-        { name: "Golden Premier", group: "Películas", url: "http://45.5.119.43:4000/play/a0jv/index.m3u8", emoji: "⭐", num: 604 },
-        { name: "Film & Arts", group: "Películas", url: "http://45.5.119.43:4000/play/a0gs/index.m3u8", emoji: "🎨", num: 605 },
-        { name: "Sony Movies", group: "Películas", url: "http://45.5.119.43:4000/play/a03s/index.m3u8", emoji: "🎬", num: 606 },
-        { name: "Univision", group: "General", url: "http://45.5.119.43:4000/play/a0kr/index.m3u8", emoji: "🇲🇽", num: 801 },
-        { name: "Telemundo", group: "General", url: "http://45.5.119.43:4000/play/a0gv/index.m3u8", emoji: "🇺🇸", num: 802 },
-        { name: "Exa TV", group: "Música", url: "http://45.5.119.43:4000/play/a0hk/index.m3u8", emoji: "🎤", num: 901 },
-        { name: "HTV", group: "Música", url: "http://45.5.119.43:4000/play/a0hk/index.m3u8", emoji: "🎵", num: 902 },
-        { name: "MTV", group: "Música", url: "http://45.5.119.43:4000/play/a0if/index.m3u8", emoji: "🎶", num: 903 },
-        { name: "MTV 00s", group: "Música", url: "http://45.5.119.43:4000/play/a0i0/index.m3u8", emoji: "📼", num: 904 },
-        { name: "MTV LIVE", group: "Música", url: "http://45.5.119.43:4000/play/a0if/index.m3u8", emoji: "🎸", num: 905 },
-        { name: "BANDAMAX", group: "Música", url: "http://45.5.119.43:4000/play/a0hk/index.m3u8", emoji: "🎺", num: 906 },
-        { name: "Claro Sports HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a0kz/index.m3u8", emoji: "⚽", num: 1001 },
-        { name: "Claro Sports 3 HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a024/index.m3u8", emoji: "⚽", num: 1002 },
-        { name: "ESPN HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a052/index.m3u8", emoji: "🏈", num: 1003 },
-        { name: "ESPN 2 HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a053/index.m3u8", emoji: "🏀", num: 1004 },
-        { name: "ESPN 3 HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a054/index.m3u8", emoji: "⚾", num: 1005 },
-        { name: "ESPN 4 HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a028/index.m3u8", emoji: "🏒", num: 1006 },
-        { name: "ESPN 5 HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a0ix/index.m3u8", emoji: "🎾", num: 1007 },
-        { name: "ESPN 6 HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a0kj/index.m3u8", emoji: "🏉", num: 1008 },
-        { name: "Golf Channel HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a0h1/index.m3u8", emoji: "⛳", num: 1009 },
-        { name: "Tigo Sports HD", group: "Deportes", url: "http://45.5.119.43:4000/play/a02v/index.m3u8", emoji: "📡", num: 1010 },
-        { name: "BEIN SPORTS Ñ", group: "Deportes", url: "http://45.5.119.43:4000/play/a05s/index.m3u8", emoji: "⚽", num: 1011 },
-        { name: "SKY SPORTS", group: "Deportes", url: "http://45.5.119.43:4000/play/a05r/index.m3u8", emoji: "📺", num: 1012 },
-        { name: "TUDN", group: "Deportes", url: "http://45.5.119.43:4000/play/a05q/index.m3u8", emoji: "📡", num: 1013 },
-        { name: "TIGO GT", group: "Deportes", url: "http://45.5.119.43:4000/play/a05t/index.m3u8", emoji: "🏆", num: 1014 }
-    ];
+#EXTINF:-1 tvg-id="584" tvg-name="584 STAR CHANNEL FHD" tvg-logo="https://bestleague.world/img/star.webp" group-title="CINE",584 STAR CHANNEL FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/189.ts
 
-    // Lista de canales TecnoTV
-    const rawChannelsTV055 = [
-        { name: "HBO HD", group: "HBO", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0l2&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎬", num: 1 },
-        { name: "HBO2 HD", group: "HBO", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a00c&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎥", num: 2 },
-        { name: "HBO Family HD", group: "HBO", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0l5&token=tecnotokenplustv230516F&f=.m3u8", emoji: "👨‍👩‍👧", num: 3 },
-        { name: "HBO Plus HD", group: "HBO", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0l4&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⭐", num: 4 },
-        { name: "HBO XTREME HD", group: "HBO", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0l6&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⚡", num: 5 },
-        { name: "UNIVERSAL", group: "Universal", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0ih&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🌍", num: 6 },
-        { name: "UNIVERSAL CINEMA HD", group: "Universal", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0kt&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎞️", num: 7 },
-        { name: "UNIVERSAL COMEDY HD", group: "Universal", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0i5&token=tecnotokenplustv230516F&f=.m3u8", emoji: "😂", num: 8 },
-        { name: "UNIVERSAL CRIME HD", group: "Universal", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0i4&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🔪", num: 9 },
-        { name: "UNIVERSAL REALITY HD", group: "Universal", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0i3&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📺", num: 10 },
-        { name: "ESTRENO UNIVERSAL HD", group: "Universal", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0i1&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🌟", num: 11 },
-        { name: "A&E HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gt&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📖", num: 12 },
-        { name: "AMC HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gu&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎭", num: 13 },
-        { name: "AXN HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0iy&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🔫", num: 14 },
-        { name: "FX HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gw&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎬", num: 15 },
-        { name: "TNT HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hu&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⚔️", num: 16 },
-        { name: "TNT SERIES HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0km&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📺", num: 17 },
-        { name: "TNT Novelas", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0g9&token=tecnotokenplustv230516F&f=.m3u8", emoji: "💖", num: 18 },
-        { name: "E! Entertainment HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gr&token=tecnotokenplustv230516F&f=.m3u8", emoji: "✨", num: 19 },
-        { name: "DISTRITO COMEDIA", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a05l&token=tecnotokenplustv230516F&f=.m3u8", emoji: "😂", num: 20 },
-        { name: "SPACE HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0iz&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🚀", num: 21 },
-        { name: "WARNER HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0ho&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🦸", num: 22 },
-        { name: "Animal Planet HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gq&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🐘", num: 23 },
-        { name: "DHE HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gy&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🌎", num: 24 },
-        { name: "Discovery Channel HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0kn&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📡", num: 25 },
-        { name: "Discovery ID HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0ks&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🔍", num: 26 },
-        { name: "Discovery World HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0kp&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🌍", num: 27 },
-        { name: "DISCOVERY THEATHER HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hv&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎭", num: 28 },
-        { name: "Discovery Turbo", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0ia&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏎️", num: 29 },
-        { name: "Home & Health HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hw&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏠", num: 30 },
-        { name: "TLC", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hh&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏡", num: 31 },
-        { name: "History Channel HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gk&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📜", num: 32 },
-        { name: "History 2", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0jp&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏛️", num: 33 },
-        { name: "Nat Geo HD", group: "Documentales", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0kk&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🐆", num: 34 },
-        { name: "Cartoon Network", group: "Infantiles", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a029&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🤖", num: 35 },
-        { name: "Disney channel", group: "Infantiles", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0i8&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🐭", num: 36 },
-        { name: "Discovery Kids", group: "Infantiles", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a03l&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🧸", num: 37 },
-        { name: "Disney JR", group: "Infantiles", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0g1&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🐭", num: 38 },
-        { name: "Nickelodeon", group: "Infantiles", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0i9&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🧽", num: 39 },
-        { name: "CINECANAL HD", group: "Películas", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hq&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎥", num: 40 },
-        { name: "CineMax", group: "Películas", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0il&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🍿", num: 41 },
-        { name: "Golden", group: "Películas", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0jv&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏆", num: 42 },
-        { name: "Film & arts HD", group: "Películas", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gs&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎨", num: 43 },
-        { name: "SONY MOVIES HD", group: "Películas", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a03s&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎬", num: 44 },
-        { name: "Univision HD", group: "General", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0kr&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🇲🇽", num: 45 },
-        { name: "Telemundo HD", group: "General", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0gv&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🇺🇸", num: 46 },
-        { name: "Exa TV", group: "Música", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hk&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎤", num: 47 },
-        { name: "Claro Sports HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0kz&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⚽", num: 48 },
-        { name: "Claro Sports 3 HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a024&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⚽", num: 49 },
-        { name: "ESPN HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a052&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏈", num: 50 },
-        { name: "ESPN 2 HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a053&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏀", num: 51 },
-        { name: "ESPN 3 HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a054&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⚾", num: 52 },
-        { name: "ESPN 4 HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a028&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏒", num: 53 },
-        { name: "ESPN 5 HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0ix&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎾", num: 54 },
-        { name: "ESPN 6 HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0kj&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏉", num: 55 },
-        { name: "Golf Channel HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0h1&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⛳", num: 56 },
-        { name: "Tigo Sports HD", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a02v&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📡", num: 57 },
-        { name: "SKY SPORTS", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a05r&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📺", num: 58 },
-        { name: "TUDN", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a05q&token=tecnotokenplustv230516F&f=.m3u8", emoji: "📡", num: 59 },
-        { name: "TIGO GT", group: "Deportes", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a05t&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🏆", num: 60 },
-        { name: "STAR CHANNEL HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hn&token=tecnotokenplustv230516F&f=.m3u8", emoji: "⭐", num: 61 },
-        { name: "STAR LIFE", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0g4&token=tecnotokenplustv230516F&f=.m3u8", emoji: "✨", num: 62 },
-        { name: "SONY HD", group: "Series y Entretenimiento", url: "http://tecnotv.club/rm8h/phpcode/ssiptv.php?c=a0hp&token=tecnotokenplustv230516F&f=.m3u8", emoji: "🎮", num: 63 }
-    ];
+#EXTINF:-1 tvg-id="163" tvg-name="163 CINECANAL FHD" tvg-logo="https://bestleague.world/img/cinecanal.webp" group-title="CINE",163 CINECANAL FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/187.ts
 
-    // Normalización y fusión
-    function normalizeName(n) { return n.toLowerCase().replace(/[™®·]/g,'').replace(/\bhd\b|\bhdtv\b|\blatinoamerica\b|\bmx\b/gi,'').replace(/\s+/g,' ').trim().replace(/\b(\w+)\s+(\d+)\b/,'$1$2'); }
-    const urlMap = new Map();
-    rawChannelsTV05.forEach(ch => { let norm = normalizeName(ch.name); if(!urlMap.has(norm)) urlMap.set(norm, { url05: ch.url, url055: null, name05: ch.name, group05: ch.group }); else urlMap.get(norm).url05 = ch.url; });
-    rawChannelsTV055.forEach(ch => { let norm = normalizeName(ch.name); if(!urlMap.has(norm)) urlMap.set(norm, { url05: null, url055: ch.url, name055: ch.name, group055: ch.group }); else { let e=urlMap.get(norm); e.url055=ch.url; e.name055=ch.name; e.group055=ch.group; } });
-    
-    const unifiedChannels = [];
-    let idGen = 1;
-    for (let [norm, data] of urlMap) {
-        let group = data.group05 || data.group055 || "General";
-        let displayName = data.name05 || data.name055 || norm;
-        unifiedChannels.push({ id: idGen++, name: displayName, group, normName: norm, url05: data.url05, url055: data.url055, hasBoth: !!(data.url05 && data.url055) });
-    }
-    const groups = {};
-    unifiedChannels.forEach(ch => { if(!groups[ch.group]) groups[ch.group] = []; groups[ch.group].push(ch); });
-    const groupIcons = { "HBO":"🎬","Universal":"🌍","Series y Entretenimiento":"📺","Documentales":"🌿","Infantiles":"🧸","Películas":"🎥","General":"📡","Música":"🎵","Deportes":"⚽" };
-    const CATEGORIES = Object.fromEntries(Object.entries(groups).map(([gName, chs]) => [gName, { icon: groupIcons[gName] || "📺", channels: chs }]));
-    
-    let currentCategory = Object.keys(CATEGORIES)[0];
-    let currentChannel = unifiedChannels[0];
-    let currentSource = currentChannel?.url05 ? "05" : "055";
-    let searchQuery = "", isSearchMode = false, filteredCh = [];
-    let currentHls = null, loadingTimeout = null, videoPlaying = false;
-    
-    const tabsC = document.getElementById('tabsContainer'), strip = document.getElementById('channelsStrip');
-    const videoFrame = document.getElementById('videoFrame'), player = document.getElementById('playerVideo');
-    const searchInp = document.getElementById('searchInput'), clearBtn = document.getElementById('clearSearchBtn');
-    const selDiv = document.getElementById('sourceSelector'), src1 = document.getElementById('source1Btn'), src2 = document.getElementById('source2Btn');
-    
-    function loadingOverlay(chName) { 
-        let d = document.createElement('div'); 
-        d.className='loading-overlay'; 
-        d.innerHTML=`<div class="loading-dots"><span></span><span></span><span></span></div><div class="loading-text">🔴 CARGANDO ${chName}</div><div class="loading-sub">Estableciendo conexión HD...</div>`; 
-        return d; 
-    }
-    function removeLoad() { 
-        if(window._curLoad && window._curLoad.parentElement) window._curLoad.remove(); 
-        window._curLoad=null; 
-        if(loadingTimeout) clearTimeout(loadingTimeout); 
-        loadingTimeout=null; 
-    }
-    function showLoad(chName) { 
-        videoPlaying=false; 
-        removeLoad(); 
-        let ov=loadingOverlay(chName); 
-        videoFrame.style.position='relative'; 
-        videoFrame.appendChild(ov); 
-        window._curLoad=ov; 
-        loadingTimeout=setTimeout(()=>{ 
-            if(window._curLoad && !videoPlaying) removeLoad(); 
-        }, 12000); 
-    }
-    function hideLoad() { removeLoad(); }
-    function updateSourceVis() { if(currentChannel?.hasBoth) selDiv.classList.add('visible'); else selDiv.classList.remove('visible'); }
-    function playChannel(ch, src) { 
-        let url=src==="05"?ch.url05:ch.url055; 
-        if(!url) return; 
-        if(currentHls){ currentHls.destroy(); currentHls=null; } 
-        videoFrame.classList.remove('welcome-mode'); 
-        videoFrame.classList.add('video-mode'); 
-        showLoad(ch.name); 
-        player.pause(); 
-        player.removeAttribute('src'); 
-        player.load(); 
-        let onPlay=()=>{ 
-            videoPlaying=true; 
-            hideLoad(); 
-            player.removeEventListener('playing',onPlay); 
-            player.removeEventListener('canplay',onPlay); 
-        }; 
-        player.addEventListener('playing',onPlay); 
-        player.addEventListener('canplay',onPlay); 
-        player.onerror=()=>{ hideLoad(); }; 
-        if(url.includes('.m3u8') && Hls.isSupported()){ 
-            currentHls=new Hls({debug:false, enableWorker:true}); 
-            currentHls.loadSource(url); 
-            currentHls.attachMedia(player); 
-            currentHls.on(Hls.Events.MANIFEST_PARSED,()=>player.play().catch(e=>console.log)); 
-            currentHls.on(Hls.Events.ERROR,(_,d)=> { 
-                if(d.fatal && d.type===Hls.ErrorTypes.NETWORK_ERROR){ 
-                    player.src=url; 
-                    player.play().catch(e=>console.log); 
-                } 
-            }); 
-        } else { 
-            player.src=url; 
-            player.play().catch(e=>console.log); 
-        } 
-    }
-    function updateUI(){ playChannel(currentChannel, currentSource); document.querySelectorAll('.channel-card-horizontal').forEach(c=>c.classList.toggle('active',parseInt(c.dataset.id)===currentChannel.id)); updateSourceVis(); src1.classList.toggle('active',currentSource==="05"); src2.classList.toggle('active',currentSource==="055"); }
-    function switchSource(newSrc){ if(currentSource===newSrc || !currentChannel?.hasBoth) return; currentSource=newSrc; updateUI(); }
-    function renderChannels(){ let arr = (isSearchMode && searchQuery.trim()) ? filteredCh : (CATEGORIES[currentCategory]?.channels||[]); strip.innerHTML=''; if(arr.length===0){ strip.innerHTML='<div class="no-results">📺 Sin resultados</div>'; return; } arr.forEach(ch=>{ let card=document.createElement('div'); card.className='channel-card-horizontal'; if(ch.id===currentChannel?.id) card.classList.add('active'); card.dataset.id=ch.id; card.innerHTML=`<div class="ch-num-h">${ch.id}</div><div class="ch-info-h"><div class="ch-name-h">${ch.name}</div><div class="ch-cat-h">${ch.group}</div></div>`; card.addEventListener('click',()=>{ if(currentChannel?.id===ch.id) return; currentChannel=ch; currentSource = ch.url05?(ch.url055?"05":"05"):"055"; updateUI(); }); strip.appendChild(card); }); setTimeout(()=>{ let act=document.querySelector('.channel-card-horizontal.active'); if(act) act.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}); },30); }
-    function performSearch(q){ searchQuery=q.toLowerCase().trim(); if(!searchQuery){ isSearchMode=false; clearBtn.classList.remove('visible'); document.querySelectorAll('.category-tab').forEach(t=>t.classList.toggle('active',t.dataset.category===currentCategory)); } else { isSearchMode=true; clearBtn.classList.add('visible'); filteredCh=unifiedChannels.filter(c=>c.name.toLowerCase().includes(searchQuery)); if(filteredCh.length && (!currentChannel || !filteredCh.some(c=>c.id===currentChannel.id))){ currentChannel=filteredCh[0]; currentSource = currentChannel.url05?"05":"055"; updateUI(); } document.querySelectorAll('.category-tab').forEach(t=>t.classList.remove('active')); } renderChannels(); }
-    function renderTabs(){ tabsC.innerHTML=''; for(let [cat,data] of Object.entries(CATEGORIES)){ let btn=document.createElement('button'); btn.className='category-tab'; if(cat===currentCategory && !isSearchMode) btn.classList.add('active'); btn.dataset.category=cat; btn.innerHTML=`<span class="tab-icon">${data.icon}</span><span>${cat}</span>`; btn.onclick=()=>{ if(isSearchMode){ searchInp.value=''; performSearch(''); } currentCategory=cat; document.querySelectorAll('.category-tab').forEach(t=>t.classList.remove('active')); btn.classList.add('active'); let first=CATEGORIES[cat]?.channels[0]; if(first){ currentChannel=first; currentSource=first.url05?"05":"055"; updateUI(); } renderChannels(); }; tabsC.appendChild(btn); } }
-    searchInp.addEventListener('input',e=>performSearch(e.target.value)); clearBtn.onclick=()=>{ searchInp.value=''; performSearch(''); }; src1.onclick=()=>switchSource("05"); src2.onclick=()=>switchSource("055");
-    renderTabs(); renderChannels(); videoFrame.classList.add('welcome-mode'); if(unifiedChannels[0]) { currentChannel=unifiedChannels[0]; currentSource=currentChannel.url05?"05":"055"; updateUI(); }
-    updateSourceVis();
-    
-    document.body.classList.remove('light');
-</script>
-</body>
-</html>
+#EXTINF:-1 tvg-id="173" tvg-name="173 CINEMAX FHD" tvg-logo="https://telelibree.com/img/cinemax.webp" group-title="CINE",173 CINEMAX FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/188.ts
+
+#EXTINF:-1 tvg-id="373" tvg-name="373 GOLDEN FHD" tvg-logo="https://tele-libre.org/img/golden.png" group-title="CINE",373 GOLDEN FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/131.ts
+
+#EXTINF:-1 tvg-id="378" tvg-name="378 GOLDEN PREMIER FHD" tvg-logo="https://static.wikia.nocookie.net/doblaje/images/b/b9/Golden_Premier_LA_2020.png/revision/latest?cb=20210112175406&path-prefix=es" group-title="CINE",378 GOLDEN PREMIER FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/166.ts
+
+#EXTINF:-1 tvg-id="381" tvg-name="381 GOLDEN PREMIER 2 FHD" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/9/90/Golden_Premier_2_2020.png/revision/latest?cb=20201201141739&path-prefix=es" group-title="CINE",381 GOLDEN PREMIER 2 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/167.ts
+
+#EXTINF:-1 tvg-id="374" tvg-name="374 GOLDEN EDGE FHD" tvg-logo="https://tele-libre.org/img/golden-edge.png" group-title="CINE",374 GOLDEN EDGE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/168.ts
+
+#EXTINF:-1 tvg-id="377" tvg-name="377 GOLDEN PLUS FHD" tvg-logo="https://www.tvenvivo2.com/imge/goldenplus.webp" group-title="CINE",377 GOLDEN PLUS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/169.ts
+
+#EXTINF:-1 tvg-id="322" tvg-name="322 FILM & ARTS FHD" tvg-logo="https://bestleague.world/img/film.png" group-title="CINE",322 FILM & ARTS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/71.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="SONY MOVIES FHD" tvg-logo="https://tele-libre.org/img/sonymovies.webp" group-title="CINE",SONY MOVIES FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/100.ts
+
+#EXTINF:-1 tvg-id="141" tvg-name="141 CANAL SONY FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/b/b9/Sony_Channel_Logo.png" group-title="CINE",141 CANAL SONY FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/99.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="MULTICINEMA FHD" tvg-logo="https://www.telextrema2.com/imge/multicinema.webp" group-title="CINE",MULTICINEMA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/109.ts
+
+#EXTINF:-1 tvg-id="492" tvg-name="492 MULTIPREMIER FHD" tvg-logo="https://www.telextrema2.com/imge/multipremier.webp" group-title="CINE",492 MULTIPREMIER FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/160.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="CINE FAMILIAR FHD" tvg-logo="https://i.imgur.com/ZgP2hE3.png" group-title="CINE",CINE FAMILIAR FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/105.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="CINE PREMIUM FHD" tvg-logo="https://www.televisiongratishd3.com/imge/cinepremium.webp" group-title="CINE",CINE PREMIUM FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/79.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="CINE HISPANO FHD" tvg-logo="https://www.televisiongratishd3.com/imge/cinehispano.webp" group-title="CINE",CINE HISPANO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/272.ts
+
+#EXTINF:-1 tvg-id="41" tvg-name="41 A3 CINE FHD" tvg-logo="https://www.tvenvivo2.com/imge/a3cine.webp" group-title="CINE",41 A3 CINE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/269.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="AZ CINEMA FHD" tvg-logo="https://www.televisiongratishd3.com/imge/azcinema.webp" group-title="CINE",AZ CINEMA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/148.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="FM HOT FAMILY FHD" tvg-logo="https://www.telextrema2.com/imge/fmhotfamily.webp" group-title="CINE",FM HOT FAMILY FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/245.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="FM HOT REWIND" tvg-logo="https://www.telextrema2.com/imge/fmhotrewind.webp" group-title="CINE",FM HOT REWIND
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/36.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="+CINE FAMILY FHD" tvg-logo="https://www.televisiongratishd3.com/imge/cinefamily.webp" group-title="CINE",+CINE FAMILY FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/263.ts
+
+#EXTINF:-1 tvg-id="306" tvg-name="306 EUROPA EUROPA FHD" tvg-logo="https://www.tvenvivo2.com/imge/europa.webp" group-title="CINE",306 EUROPA EUROPA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/116.ts
+
+#EXTINF:-1 tvg-id="681" tvg-name="681 TCM FHD" tvg-logo="https://www.telextrema2.com/imge/tcm.webp" group-title="CINE",681 TCM FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/199.ts
+
+# ====================== SERIES ======================
+
+#EXTINF:-1 tvg-id="752" tvg-name="752 UNIVERSAL TV FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Universal_TV_logo.svg/512px-Universal_TV_logo.svg.png" group-title="SERIES",752 UNIVERSAL TV FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/162.ts
+
+#EXTINF:-1 tvg-id="8" tvg-name="8 DISCOVERY A&E FHD" tvg-logo="https://www.tvenvivo2.com/imge/discoveryaye.webp" group-title="SERIES",DISCOVERY A&E FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/149.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="AMC SERIES FHD" tvg-logo="https://www.televisiongratishd3.com/imge/amcseries.webp" group-title="SERIES",AMC SERIES FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/264.ts
+
+#EXTINF:-1 tvg-id="87" tvg-name="87 AXN FHD" tvg-logo="https://bestleague.world/img/axn.webp" group-title="SERIES",87 AXN FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/163.ts
+
+#EXTINF:-1 tvg-id="198" tvg-name="198 COMEDY CENTRAL FHD" tvg-logo="https://bestleague.world/img/comedy.webp" group-title="SERIES",198 COMEDY CENTRAL FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/156.ts
+
+#EXTINF:-1 tvg-id="354" tvg-name="354 FX FHD" tvg-logo="https://tele-libre.org/img/fx.webp" group-title="SERIES",354 FX FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/171.ts
+
+#EXTINF:-1 tvg-id="700" tvg-name="700 TNT FHD" tvg-logo="https://static.wikia.nocookie.net/esstarwars/images/2/2c/Tnt_logo.png/revision/latest?cb=20091230061033" group-title="SERIES",700 TNT FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/190.ts
+
+#EXTINF:-1 tvg-id="706" tvg-name="706 TNT SERIES FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/TNT_Series_Logo_2016.png/200px-TNT_Series_Logo_2016.png" group-title="SERIES",706 TNT SERIES FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/165.ts
+
+#EXTINF:-1 tvg-id="235" tvg-name="235 DISTRITO COMEDIA FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/0/09/Logo_Distrito_Comedia.png" group-title="SERIES",235 DISTRITO COMEDIA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/186.ts
+
+#EXTINF:-1 tvg-id="739" tvg-name="739 UNICABLE FHD" tvg-logo="https://tele-libre.org/img/unicable.webp" group-title="SERIES",739 UNICABLE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/173.ts
+
+#EXTINF:-1 tvg-id="141" tvg-name="141 CANAL SONY FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/b/b9/Sony_Channel_Logo.png" group-title="SERIES",141 CANAL SONY FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/164.ts
+
+#EXTINF:-1 tvg-id="581" tvg-name="581 SPACE FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/SpaceLogo.svg/512px-SpaceLogo.svg.png" group-title="SERIES",581 SPACE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/191.ts
+
+#EXTINF:-1 tvg-id="455" tvg-name="455 LIFETIME FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_Lifetime_2020.svg/512px-Logo_Lifetime_2020.svg.png" group-title="SERIES",455 LIFETIME FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/144.ts
+
+#EXTINF:-1 tvg-id="770" tvg-name="770 WARNER BROS TV FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Warner2018LA.png/512px-Warner2018LA.png" group-title="SERIES",WARNER BROS TV FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/127.ts
+
+#EXTINF:-1 tvg-id="43" tvg-name="43 A3SERIES FHD" tvg-logo="https://www.tvenvivo2.com/imge/a3series.webp" group-title="SERIES",A3SERIES FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/113.ts
+
+#EXTINF:-1 tvg-id="756" tvg-name="756 USA FHD" tvg-logo="https://www.televisiongratishd3.com/imge/usa.webp" group-title="SERIES",756 USA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/177.ts
+
+#EXTINF:-1 tvg-id="532" tvg-name="532 PANICO FHD" tvg-logo="https://www.telextrema2.com/imge/panico.webp" group-title="SERIES",532 PANICO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/130.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="EXTREMA TV FHD" tvg-logo="https://www.telextrema2.com/imge/extrema.webp" group-title="SERIES",EXTREMA TV FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/128.ts
+
+# ====================== NOVELAS ======================
+
+#EXTINF:-1 tvg-id="1002" tvg-name="1002 TNT NOVELAS FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/3/3a/Logo_TNT_Novelas.png" group-title="NOVELAS",1002 TNT NOVELAS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/122.ts
+
+#EXTINF:-1 tvg-id="699" tvg-name="699 TLNOVELAS FHD" tvg-logo="https://www.tvenvivo2.com/imge/tlnovelas.webp" group-title="NOVELAS",699 TLNOVELAS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/179.ts
+
+#EXTINF:-1 tvg-id="537" tvg-name="537 PASIONES FHD" tvg-logo="https://www.telextrema2.com/imge/pasiones.webp" group-title="NOVELAS",537 PASIONES FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/89.ts
+
+#EXTINF:-1 tvg-id="444" tvg-name="444 KANAL D DRAMA FHD" tvg-logo="https://www.televisiongratishd3.com/imge/kanald.webp" group-title="NOVELAS",444 KANAL D DRAMA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/111.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="AZ CORAZON FHD" tvg-logo="https://www.televisiongratishd3.com/imge/azcorazon.webp" group-title="NOVELAS",AZ CORAZON FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/270.ts
+
+# ====================== DOCUMENTALES ======================
+
+#EXTINF:-1 tvg-id="28" tvg-name="28 ANIMAL PLANET FHD" tvg-logo="https://tele-libre.org/img/aplanet.webp" group-title="DOCUMENTALES",28 ANIMAL PLANET FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/154.ts
+
+#EXTINF:-1 tvg-id="135" tvg-name="135 CANAL DHE FHD" tvg-logo="https://digitaltv.prensariozone.com/wp-content/uploads/2021/09/Logo-DHE.png" group-title="DOCUMENTALES",135 CANAL DHE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/118.ts
+
+#EXTINF:-1 tvg-id="430" tvg-name="430 ID INVESTIGATION FHD" tvg-logo="https://bestleague.world/img/id.webp" group-title="DOCUMENTALES",430 ID INVESTIGATION FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/150.ts
+
+#EXTINF:-1 tvg-id="228" tvg-name="228 DISCOVERY WORLD FHD" tvg-logo="https://bestleague.world/img/disworld.webp" group-title="DOCUMENTALES",228 DISCOVERY WORLD FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/146.ts
+
+#EXTINF:-1 tvg-id="212" tvg-name="212 DISCOVERY CHANNEL FHD" tvg-logo="https://television-libre.online/img/discovery.webp" group-title="DOCUMENTALES",212 DISCOVERY CHANNEL FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/153.ts
+
+#EXTINF:-1 tvg-id="225" tvg-name="225 DISCOVERY THEATER FHD" tvg-logo="https://tele-libre.org/img/distheater.webp" group-title="DOCUMENTALES",225 DISCOVERY THEATER FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/147.ts
+
+#EXTINF:-1 tvg-id="216" tvg-name="216 DISCOVERY HYH FHD" tvg-logo="https://tele-libre.org/img/hyh.webp" group-title="DOCUMENTALES",216 DISCOVERY HYH FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/151.ts
+
+#EXTINF:-1 tvg-id="420" tvg-name="420 HISTORY FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/History_Logo.svg/512px-History_Logo.svg.png" group-title="DOCUMENTALES",420 HISTORY FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/184.ts
+
+#EXTINF:-1 tvg-id="422" tvg-name="422 HISTORY 2 FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/a/a3/History2Logo2019.png" group-title="DOCUMENTALES",422 HISTORY 2 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/183.ts
+
+#EXTINF:-1 tvg-id="503" tvg-name="503 NATIONAL GEOGRAPHIC FHD" tvg-logo="https://bestleague.world/img/natgeo.webp" group-title="DOCUMENTALES",503 NATIONAL GEOGRAPHIC FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/155.ts
+
+#EXTINF:-1 tvg-id="223" tvg-name="223 DISCOVERY SCIENCE FHD" tvg-logo="https://tele-libre.org/img/disscience.webp" group-title="DOCUMENTALES",223 DISCOVERY SCIENCE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/250.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="LOVE NATURE FHD" tvg-logo="https://www.televisiongratishd3.com/imge/lovenature.webp" group-title="DOCUMENTALES",LOVE NATURE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/114.ts
+
+# ====================== INFANTILES ======================
+
+#EXTINF:-1 tvg-id="221" tvg-name="221 DISCOVERY KIDS FHD" tvg-logo="https://tele-libre.org/img/diskids.webp" group-title="INFANTILES",221 DISCOVERY KIDS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/136.ts
+
+#EXTINF:-1 tvg-id="146" tvg-name="146 CARTOON NETWORK FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Cartoon_Network_2010_logo.svg/512px-Cartoon_Network_2010_logo.svg.png" group-title="INFANTILES",146 CARTOON NETWORK FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/139.ts
+
+#EXTINF:-1 tvg-id="1006" tvg-name="1006 CARTOONITO FHD" tvg-logo="https://www.tvenvivo2.com/imge/cartoonito.webp" group-title="INFANTILES",1000 CARTOONITO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/138.ts
+
+#EXTINF:-1 tvg-id="711" tvg-name="711 TOONCAST FHD" tvg-logo="https://www.tvenvivo2.com/imge/tooncast.webp" group-title="INFANTILES",711 TOONCAST FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/137.ts
+
+#EXTINF:-1 tvg-id="229" tvg-name="229 DISNEY CHANNEL FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Disney_Channel_Germany_Logo_2014.png/1200px-Disney_Channel_Germany_Logo_2014.png" group-title="INFANTILES",229 DISNEY CHANNEL FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/125.ts
+
+#EXTINF:-1 tvg-id="231" tvg-name="231 DISNEY JR FHD" tvg-logo="https://tele-libre.org/img/disneyjr.webp" group-title="INFANTILES",231 DISNEY JR FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/142.ts
+
+#EXTINF:-1 tvg-id="516" tvg-name="516 NICK JR FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Nick_Jr._logo_2009.svg/512px-Nick_Jr._logo_2009.svg.png" group-title="INFANTILES",516 NICK JR FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/140.ts
+
+#EXTINF:-1 tvg-id="514" tvg-name="514 NICK FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Nick_Jr._logo_2009.svg/512px-Nick_Jr._logo_2009.svg.png" group-title="INFANTILES",514 NICK FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/141.ts
+
+#EXTINF:-1 tvg-id="17" tvg-name="17 ADULT SWIM FHD" tvg-logo="https://www.tvenvivo2.com/imge/adultswim.webp" group-title="INFANTILES",17 ADULT SWIM FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/35.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="FM HOT KIDS FHD" tvg-logo="https://www.telextrema2.com/imge/fmhotkids.webp" group-title="INFANTILES",FM HOT KIDS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/119.ts
+
+#EXTINF:-1 tvg-id="1236" tvg-name="1236 ZOOMOO FHD" tvg-logo="https://www.televisiongratishd3.com/imge/zoomoo.webp" group-title="INFANTILES",1236 ZOOMOO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/40.ts
+
+# ====================== SEÑALES LATINOAMÉRICA ======================
+
+#EXTINF:-1 tvg-id="755" tvg-name="755 UNIVISION FHD" tvg-logo="https://tele-libre.org/img/univision.png" group-title="SEÑALES LATINOAMÉRICA",UNIVISION FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/88.ts
+
+#EXTINF:-1 tvg-id="690" tvg-name="690 TELEMUNDO 51 FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Telemundo_logo_2018.svg/512px-Telemundo_logo_2018.svg.png" group-title="SEÑALES LATINOAMÉRICA",TELEMUNDO 51 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/85.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="TELEMUNDO PUERTO RICO FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Telemundo_logo_2018.svg/512px-Telemundo_logo_2018.svg.png" group-title="SEÑALES LATINOAMÉRICA",TELEMUNDO PUERTO RICO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/86.ts
+
+#EXTINF:-1 tvg-id="690" tvg-name="690 TELEMUNDO INTERNACIONAL FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Telemundo_logo_2018.svg/512px-Telemundo_logo_2018.svg.png" group-title="SEÑALES LATINOAMÉRICA",690 TELEMUNDO INTERNACIONAL FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/87.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="LAS ESTRELLAS FHD" tvg-logo="https://www.tvenvivo2.com/imge/lasestrellas.webp" group-title="SEÑALES LATINOAMÉRICA",LAS ESTRELLAS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/178.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="AZTECA 7 FHD" tvg-logo="https://www.televisiongratishd3.com/imge/azteca7.webp" group-title="SEÑALES LATINOAMÉRICA",AZTECA 7 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/80.ts
+
+#EXTINF:-1 tvg-id="99" tvg-name="99 AZTECA UNO FHD" tvg-logo="https://www.televisiongratishd3.com/imge/aztecauno.webp" group-title="SEÑALES LATINOAMÉRICA",99 AZTECA UNO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/182.ts
+
+#EXTINF:-1 tvg-id="97" tvg-name="97 AZTECA INTERNACIONAL FHD" tvg-logo="https://www.televisiongratishd3.com/imge/aztecainternacional.webp" group-title="SEÑALES LATINOAMÉRICA",97 AZTECA INTERNACIONAL FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/181.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="CANAL 5 FHD" tvg-logo="https://www.tvenvivo2.com/imge/canal5.webp" group-title="SEÑALES LATINOAMÉRICA",CANAL 5 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/81.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="EL TRECE FHD" tvg-logo="https://www.tvenvivo2.com/imge/eltrece.webp" group-title="SEÑALES LATINOAMÉRICA",EL TRECE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/82.ts
+
+#EXTINF:-1 tvg-id="684" tvg-name="684 TELEFE INTERNACIONAL FHD" tvg-logo="https://www.tvenvivo2.com/imge/telefe.webp" group-title="SEÑALES LATINOAMÉRICA",684 TELEFE INTERNACIONAL FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/83.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="TV PUBLICA FHD" tvg-logo="https://www.telextrema2.com/imge/tvpublica.webp" group-title="SEÑALES LATINOAMÉRICA",TV PUBLICA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/84.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="AMERICA TV ARGENTINA FHD" tvg-logo="https://www.tvenvivo2.com/imge/americatv.webp" group-title="SEÑALES LATINOAMÉRICA",AMERICA TV ARGENTINA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/106.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="AMERICA TV FHD" tvg-logo="https://www.tvenvivo2.com/imge/americatv.webp" group-title="SEÑALES LATINOAMÉRICA",AMERICA TV FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/192.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="LA RED FHD" tvg-logo="https://www.televisiongratishd3.com/imge/lared.webp" group-title="SEÑALES LATINOAMÉRICA",LA RED FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/107.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="EL NUEVE FHD" tvg-logo="https://www.televisiongratishd3.com/imge/elnueve.webp" group-title="SEÑALES LATINOAMÉRICA",EL NUEVE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/108.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="ECUAVISA FHD" tvg-logo="https://www.televisiongratishd3.com/imge/ecuavisa.webp" group-title="SEÑALES LATINOAMÉRICA",ECUAVISA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/62.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="RTS FHD" tvg-logo="https://www.televisiongratishd3.com/imge/rts.webp" group-title="SEÑALES LATINOAMÉRICA",RTS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/74.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="ESTRELLA TV FHD" tvg-logo="https://www.tvenvivo2.com/imge/estrellatv.webp" group-title="SEÑALES LATINOAMÉRICA",ESTRELLA TV FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/51.ts
+
+#EXTINF:-1 tvg-id="432" tvg-name="432 IMAGEN TV FHD" tvg-logo="https://www.televisiongratishd3.com/imge/imagentv.webp" group-title="SEÑALES LATINOAMÉRICA",432 IMAGEN TV FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/172.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="AZ CLICK FHD" tvg-logo="https://www.telextrema2.com/imge/azclick.webp" group-title="SEÑALES LATINOAMÉRICA",AZ CLICK FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/135.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="CANAL 13 CHILE FHD" tvg-logo="https://www.tvenvivo2.com/imge/canal13chile.webp" group-title="SEÑALES LATINOAMÉRICA",CANAL 13 CHILE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/249.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="CHILEVISION FHD" tvg-logo="https://www.tvenvivo2.com/imge/chilevision.webp" group-title="SEÑALES LATINOAMÉRICA",CHILEVISION FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/39.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="MEGA CHILE FHD" tvg-logo="https://www.televisiongratishd3.com/imge/mega.webp" group-title="SEÑALES LATINOAMÉRICA",MEGA CHILE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/247.ts
+
+#EXTINF:-1 tvg-id="720" tvg-name="720 TVN CHILE FHD" tvg-logo="https://www.televisiongratishd3.com/imge/tvnchile.webp" group-title="SEÑALES LATINOAMÉRICA",720 TVN CHILE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/194.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="CANAL 4 EL SALVADOR FHD" tvg-logo="https://www.televisiongratishd3.com/imge/canal4.webp" group-title="SEÑALES LATINOAMÉRICA",CANAL 4 EL SALVADOR FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/30.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="ECUADOR TV FHD" tvg-logo="https://www.televisiongratishd3.com/imge/ecuadortv.webp" group-title="SEÑALES LATINOAMÉRICA",ECUADOR TV FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/101.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="TELE AMAZONAS FHD" tvg-logo="https://www.televisiongratishd3.com/imge/teleamazonas.webp" group-title="SEÑALES LATINOAMÉRICA",TELE AMAZONAS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/115.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="TELEMEDELLIN FHD" tvg-logo="https://www.televisiongratishd3.com/imge/telemedellin.webp" group-title="SEÑALES LATINOAMÉRICA",TELEMEDELLIN FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/126.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="RCN FHD" tvg-logo="https://www.tvenvivo2.com/imge/rcn.webp" group-title="SEÑALES LATINOAMÉRICA",RCN FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/117.ts
+
+#EXTINF:-1 tvg-id="144" tvg-name="144 CARACOL INTERNACIONAL FHD" tvg-logo="https://www.tvenvivo2.com/imge/caracol.webp" group-title="SEÑALES LATINOAMÉRICA",144 CARACOL INTERNACIONAL FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/176.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="CANAL N FHD" tvg-logo="https://www.televisiongratishd3.com/imge/canaln.webp" group-title="SEÑALES LATINOAMÉRICA",CANAL N FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/103.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="ATV FHD" tvg-logo="https://www.televisiongratishd3.com/imge/atv.webp" group-title="SEÑALES LATINOAMÉRICA",ATV FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/175.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="ATV SUR FHD" tvg-logo="https://www.televisiongratishd3.com/imge/atvsur.webp" group-title="SEÑALES LATINOAMÉRICA",ATV SUR FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/251.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="LATINA FHD" tvg-logo="https://www.televisiongratishd3.com/imge/latina.webp" group-title="SEÑALES LATINOAMÉRICA",LATINA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/193.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="PBO PERU FHD" tvg-logo="https://www.televisiongratishd3.com/imge/pbo.webp" group-title="SEÑALES LATINOAMÉRICA",PBO PERU FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/174.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="KARIBEÑA FHD" tvg-logo="https://www.televisiongratishd3.com/imge/karibena.webp" group-title="SEÑALES LATINOAMÉRICA",KARIBEÑA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/252.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="SUN CHANNEL FHD" tvg-logo="https://www.televisiongratishd3.com/imge/sunchannel.webp" group-title="SEÑALES LATINOAMÉRICA",SUN CHANNEL FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/102.ts
+
+#EXTINF:-1 tvg-id="32" tvg-name="32 ANTENA 3 FHD" tvg-logo="https://www.tvenvivo2.com/imge/antena3.webp" group-title="SEÑALES LATINOAMÉRICA",32 ANTENA 3 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/129.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="WILLAX TV FHD" tvg-logo="https://www.televisiongratishd3.com/imge/willaxtv.webp" group-title="SEÑALES LATINOAMÉRICA",WILLAX TV FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/134.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="GLOBAL TV FHD" tvg-logo="https://www.televisiongratishd3.com/imge/globaltv.webp" group-title="SEÑALES LATINOAMÉRICA",GLOBAL TV FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/133.ts
+
+# ====================== MÚSICA ======================
+
+#EXTINF:-1 tvg-id="" tvg-name="EVERYTHING FHD" tvg-logo="https://www.telextrema2.com/imge/everything.webp" group-title="MÚSICA",EVERYTHING FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/145.ts
+
+#EXTINF:-1 tvg-id="478" tvg-name="478 MTV FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/MTV_2021_%28brand_version%29.svg/512px-MTV_2021_%28brand_version%29.svg.png" group-title="MÚSICA",478 MTV FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/157.ts
+
+#EXTINF:-1 tvg-id="687" tvg-name="687 TELEHIT FHD" tvg-logo="https://www.tvenvivo2.com/imge/telehit.webp" group-title="MÚSICA",687 TELEHIT FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/197.ts
+
+#EXTINF:-1 tvg-id="688" tvg-name="688 TELEHIT MUSICA FHD" tvg-logo="https://www.tvenvivo2.com/imge/telehitmusica.webp" group-title="MÚSICA",688 TELEHIT MUSICA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/196.ts
+
+#EXTINF:-1 tvg-id="687" tvg-name="687 TELEHIT LATINO FHD" tvg-logo="https://www.tvenvivo2.com/imge/telehitlatino.webp" group-title="MÚSICA",TELEHIT LATINO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/198.ts
+
+#EXTINF:-1 tvg-id="108" tvg-name="108 BANDAMAX FHD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/1/12/Bandamax_2015_Logo.png" group-title="MÚSICA",108 BANDAMAX FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/271.ts
+
+# ====================== COCINA ======================
+
+#EXTINF:-1 tvg-id="279" tvg-name="279 EL GOURMET FHD" tvg-logo="https://www.telextrema2.com/imge/elgourmet.webp" group-title="COCINA",279 EL GOURMET FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/143.ts
+
+#EXTINF:-1 tvg-id="327" tvg-name="327 FOOD NETWORK FHD" tvg-logo="https://tele-libre.org/img/food.webp" group-title="COCINA",327 FOOD NETWORK FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/29.ts
+
+# ====================== NOTICIAS ======================
+
+#EXTINF:-1 tvg-id="272" tvg-name="272 DW ESPAÑOL FHD" tvg-logo="https://www.televisiongratishd3.com/imge/dw.webp" group-title="NOTICIAS",272 DW ESPAÑOL FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/132.ts
+
+#EXTINF:-1 tvg-id="192" tvg-name="192 CNN ESPAÑOL FHD" tvg-logo="https://www.televisiongratishd3.com/imge/cnn.webp" group-title="NOTICIAS",192 CNN ESPAÑOL FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/248.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="RPP NOTICIAS FHD" tvg-logo="https://www.televisiongratishd3.com/imge/rpp.webp" group-title="NOTICIAS",RPP NOTICIAS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/253.ts
+
+# ====================== DEPORTES ======================
+
+#EXTINF:-1 tvg-id="510" tvg-name="510 NFL NETWORK FHD" tvg-logo="https://www.telextrema2.com/imge/nfl.webp" group-title="DEPORTES",510 NFL NETWORK FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/104.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="MLB NETWORK FHD" tvg-logo="https://fl3.moveonjoy.com/MLB_NETWORK/index.m3u8" group-title="DEPORTES",MLB NETWORK FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/246.ts
+
+#EXTINF:-1 tvg-id="505" tvg-name="505 NBA FHD" tvg-logo="https://www.telextrema2.com/imge/nba.webp" group-title="DEPORTES",505 NBA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/206.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="EVENTOS FHD" tvg-logo="https://www.librefutbol2.com/imge/eventos.webp" group-title="DEPORTES",EVENTOS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/110.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="DIRECTV SPORTS URUGUAY" tvg-logo="https://www.librefutbol2.com/imge/directvsports.webp" group-title="DEPORTES",DIRECTV SPORTS URUGUAY
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/261.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="DIRECTV SPORTS FHD" tvg-logo="https://www.librefutbol2.com/imge/directvsports.webp" group-title="DEPORTES",DIRECTV SPORTS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/214.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="DIRECTV SPORTS 2 FHD" tvg-logo="https://www.librefutbol2.com/imge/directvsports2.webp" group-title="DEPORTES",DIRECTV SPORTS 2 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/215.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="DIRECTV SPORTS PLUS FHD" tvg-logo="https://www.librefutbol2.com/imge/directvsportsplus.webp" group-title="DEPORTES",DIRECTV SPORTS PLUS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/216.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="TNT SPORTS FHD" tvg-logo="https://www.librefutbol2.com/imge/tntsports.webp" group-title="DEPORTES",TNT SPORTS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/203.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="TNT SPORTS CHILE FHD" tvg-logo="https://www.librefutbol2.com/imge/tntsportschile.webp" group-title="DEPORTES",TNT SPORTS CHILE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/237.ts
+
+#EXTINF:-1 tvg-id="287" tvg-name="287 ESPN FHD" tvg-logo="https://www.librefutbol2.com/imge/espn.webp" group-title="DEPORTES",287 ESPN FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/211.ts
+
+#EXTINF:-1 tvg-id="291" tvg-name="291 ESPN 2 FHD" tvg-logo="https://www.tvenvivo2.com/imge/espn2.webp" group-title="DEPORTES",291 ESPN 2 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/212.ts
+
+#EXTINF:-1 tvg-id="295" tvg-name="295 ESPN 3 FHD" tvg-logo="https://www.librefutbol2.com/imge/espn3.webp" group-title="DEPORTES",295 ESPN 3 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/213.ts
+
+#EXTINF:-1 tvg-id="296" tvg-name="296 ESPN 4 FHD" tvg-logo="https://www.tvenvivo2.com/imge/espn4.webp" group-title="DEPORTES",296 ESPN 4 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/242.ts
+
+#EXTINF:-1 tvg-id="298" tvg-name="298 ESPN 5 FHD" tvg-logo="https://www.librefutbol2.com/imge/espn5.webp" group-title="DEPORTES",298 ESPN 5 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/226.ts
+
+#EXTINF:-1 tvg-id="299" tvg-name="299 ESPN 6 FHD" tvg-logo="https://www.tvenvivo2.com/imge/espn6.webp" group-title="DEPORTES",299 ESPN 6 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/227.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="ESPN 7 FHD" tvg-logo="https://www.librefutbol2.com/imge/espn7.webp" group-title="DEPORTES",ESPN 7 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/228.ts
+
+#EXTINF:-1 tvg-id="346" tvg-name="346 ESPN PREMIUM FHD" tvg-logo="https://www.librefutbol2.com/imge/espnpremium.webp" group-title="DEPORTES",346 ESPN PREMIUM FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/204.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="ESPN ARGENTINA FHD" tvg-logo="https://www.librefutbol2.com/imge/espnargentina.webp" group-title="DEPORTES",ESPN ARGENTINA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/243.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="ESPN PREMIUM ARGENTINA FHD" tvg-logo="https://www.librefutbol2.com/imge/espnpremiumarg.webp" group-title="DEPORTES",ESPN PREMIUM ARGENTINA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/244.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="ESPN MEXICO FHD" tvg-logo="https://www.librefutbol2.com/imge/espnmexico.webp" group-title="DEPORTES",ESPN MEXICO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/220.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="ESPN 2 MEXICO FHD" tvg-logo="https://www.librefutbol2.com/imge/espn2mexico.webp" group-title="DEPORTES",ESPN 2 MEXICO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/221.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="ESPN 3 MEXICO FHD" tvg-logo="https://www.librefutbol2.com/imge/espn3mexico.webp" group-title="DEPORTES",ESPN 3 MEXICO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/222.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="ESPN 4 MEXICO FHD" tvg-logo="https://www.librefutbol2.com/imge/espn4mexico.webp" group-title="DEPORTES",ESPN 4 MEXICO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/234.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="ESPN 5 MEXICO FHD" tvg-logo="https://www.librefutbol2.com/imge/espn5mexico.webp" group-title="DEPORTES",ESPN 5 MEXICO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/235.ts
+
+#EXTINF:-1 tvg-id="338" tvg-name="338 FOX SPORTS FHD" tvg-logo="https://www.librefutbol2.com/imge/foxsports.webp" group-title="DEPORTES",338 FOX SPORTS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/207.ts
+
+#EXTINF:-1 tvg-id="341" tvg-name="341 FOX SPORTS 2 FHD" tvg-logo="https://www.librefutbol2.com/imge/foxsports2.webp" group-title="DEPORTES",341 FOX SPORTS 2 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/209.ts
+
+#EXTINF:-1 tvg-id="343" tvg-name="343 FOX SPORTS 3 FHD" tvg-logo="https://www.librefutbol2.com/imge/foxsports3.webp" group-title="DEPORTES",343 FOX SPORTS 3 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/210.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="FOX SPORTS MEXICO FHD" tvg-logo="https://www.librefutbol2.com/imge/foxsportsmexico.webp" group-title="DEPORTES",FOX SPORTS MEXICO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/217.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="FOX SPORTS 2 MEXICO FHD" tvg-logo="https://www.librefutbol2.com/imge/foxsports2mexico.webp" group-title="DEPORTES",FOX SPORTS 2 MEXICO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/218.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="FOX SPORTS 3 MEXICO FHD" tvg-logo="https://www.librefutbol2.com/imge/foxsports3mexico.webp" group-title="DEPORTES",FOX SPORTS 3 MEXICO FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/219.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="FOX SPORTS PREMIUM FHD" tvg-logo="https://www.librefutbol2.com/imge/foxsportspremium.webp" group-title="DEPORTES",FOX SPORTS PREMIUM FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/225.ts
+
+#EXTINF:-1 tvg-id="737" tvg-name="737 TYC SPORTS ARGENTINA FHD" tvg-logo="https://www.librefutbol2.com/imge/tycsports.webp" group-title="DEPORTES",737 TYC SPORTS ARGENTINA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/205.ts
+
+#EXTINF:-1 tvg-id="717" tvg-name="717 TUDN FHD" tvg-logo="https://www.librefutbol2.com/imge/tudn.webp" group-title="DEPORTES",717 TUDN FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/201.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="TUDN USA FHD" tvg-logo="https://www.librefutbol2.com/imge/tudnusa.webp" group-title="DEPORTES",TUDN USA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/33.ts
+
+#EXTINF:-1 tvg-id="730" tvg-name="730 TVC DEPORTES FHD" tvg-logo="https://www.librefutbol2.com/imge/tvcdeportes.webp" group-title="DEPORTES",730 TVC DEPORTES FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/202.ts
+
+#EXTINF:-1 tvg-id="95" tvg-name="95 AZTECA DEPORTES FHD" tvg-logo="https://www.librefutbol2.com/imge/aztecadeportes.webp" group-title="DEPORTES",95 AZTECA DEPORTES FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/236.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="TIGO SPORTS GUATEMALA FHD" tvg-logo="https://www.librefutbol2.com/imge/tigosporegt.webp" group-title="DEPORTES",TIGO SPORTS GUATEMALA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/96.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="TIGO SPORTS COSTA RICA FHD" tvg-logo="https://www.librefutbol2.com/imge/tigosportscr.webp" group-title="DEPORTES",TIGO SPORTS COSTA RICA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/180.ts
+
+#EXTINF:-1 tvg-id="181" tvg-name="181 CLARO SPORTS FHD" tvg-logo="https://www.librefutbol2.com/imge/clarosports.webp" group-title="DEPORTES",181 CLARO SPORTS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/120.ts
+
+#EXTINF:-1 tvg-id="184" tvg-name="184 CLARO SPORTS 2 FHD" tvg-logo="https://www.librefutbol2.com/imge/clarosports2.webp" group-title="DEPORTES",CLARO SPORTS 2 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/76.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="WIN SPORTS FHD" tvg-logo="https://www.librefutbol2.com/imge/winsports.webp" group-title="DEPORTES",WIN SPORTS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/233.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="WIN SPORTS PLUS FHD" tvg-logo="https://www.librefutbol2.com/imge/winsportsplus.webp" group-title="DEPORTES",WIN SPORTS PLUS FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/241.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="BEIN SPORTS EXTRA Ñ FHD" tvg-logo="https://www.librefutbol2.com/imge/beinsportse.webp" group-title="DEPORTES",BEIN SPORTS EXTRA Ñ FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/231.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="DAZN F1 FHD" tvg-logo="https://www.librefutbol2.com/imge/daznf1.webp" group-title="DEPORTES",DAZN F1 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/229.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="DAZN LA LIGA FHD" tvg-logo="https://www.librefutbol2.com/imge/daznlaliga.webp" group-title="DEPORTES",DAZN LA LIGA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/240.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="MOVISTAR LIGA DE CAMPEONES FHD" tvg-logo="https://www.librefutbol2.com/imge/movistarlc.webp" group-title="DEPORTES",MOVISTAR LIGA DE CAMPEONES FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/230.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="MOVISTAR LA LIGA FHD" tvg-logo="https://www.librefutbol2.com/imge/movistarlaliga.webp" group-title="DEPORTES",MOVISTAR LA LIGA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/232.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="LIGA 1 FHD" tvg-logo="https://www.librefutbol2.com/imge/liga1.webp" group-title="DEPORTES",LIGA 1 FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/223.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="LIGA 1 MAX FHD" tvg-logo="https://www.tvenvivo2.com/imge/liga1max.webp" group-title="DEPORTES",LIGA 1 MAX FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/224.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="SKY SPORTS LA LIGA FHD" tvg-logo="https://www.librefutbol2.com/imge/skysports.webp" group-title="DEPORTES",SKY SPORTS LA LIGA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/238.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="LA LIGA TV HYPERMOTION FHD" tvg-logo="https://www.librefutbol2.com/imge/laligatv.webp" group-title="DEPORTES",LA LIGA TV HYPERMOTION FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/239.ts
+
+#EXTINF:-1 tvg-id="353" tvg-name="353 FUTV COSTA RICA FHD" tvg-logo="https://www.librefutbol2.com/imge/futv.webp" group-title="DEPORTES",353 FUTV COSTA RICA FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/200.ts
+
+#EXTINF:-1 tvg-id="" tvg-name="CLOVER CHANNEL CHILE FHD" tvg-logo="https://www.librefutbol2.com/imge/clover.webp" group-title="DEPORTES",CLOVER CHANNEL CHILE FHD
+https://regionales.saohgdasregions.fun:25463/SKINHEAD/k7eeBaaWRD/95.ts
